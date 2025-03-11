@@ -1,23 +1,23 @@
-using TicketToCode.Api.Services;
+using EventManager.Api.Services;
 
-namespace TicketToCode.Api.Endpoints.Auth;
+namespace EventManager.Api.Endpoints.Auth;
 
 public class Register : IEndpoint
 {
     // Mapping
-    public static void MapEndpoint(IEndpointRouteBuilder app) => app
-        .MapPost("/auth/register", Handle)
-        .WithSummary("Register a new user")
-        .AllowAnonymous();
+    public static void MapEndpoint(IEndpointRouteBuilder app) =>
+        app.MapPost("/auth/register", Handle).WithSummary("Register a new user").AllowAnonymous();
 
     // Models
     public record Request(string Username, string Password);
+
     public record Response(string Username, string Role);
 
     // Logic
     private static Results<Ok<Response>, BadRequest<string>> Handle(
         Request request,
-        IAuthService authService)
+        IAuthService authService
+    )
     {
         var result = authService.Register(request.Username, request.Password);
         if (result == null)
@@ -27,4 +27,4 @@ public class Register : IEndpoint
         var response = new Response(result.Username, result.Role);
         return TypedResults.Ok(response);
     }
-} 
+}

@@ -1,7 +1,7 @@
-using TicketToCode.Core.Data;
-using TicketToCode.Core.Models;
+using EventManager.Core.Data;
+using EventManager.Core.Models;
 
-namespace TicketToCode.Api.Services;
+namespace EventManager.Api.Services;
 
 public interface IAuthService
 {
@@ -45,4 +45,4 @@ public class AuthService : IAuthService
         _database.Users.Add(user);
         return user;
     }
-} 
+}

@@ -1,10 +1,10 @@
-﻿namespace TicketToCode.Api.Endpoints;
+﻿namespace EventManager.Api.Endpoints;
+
 public class GetAllEvents : IEndpoint
 {
     // Mapping
-    public static void MapEndpoint(IEndpointRouteBuilder app) => app
-        .MapGet("/events", Handle)
-        .WithSummary("Get all events");
+    public static void MapEndpoint(IEndpointRouteBuilder app) =>
+        app.MapGet("/events", Handle).WithSummary("Get all events");
 
     // Request and Response types
     public record Response(
@@ -20,8 +20,8 @@ public class GetAllEvents : IEndpoint
     //Logic
     private static List<Response> Handle(IDatabase db)
     {
-        return db.Events
-            .Select(item => new Response(
+        return db
+            .Events.Select(item => new Response(
                 Id: item.Id,
                 Name: item.Name,
                 Description: item.Description,
@@ -29,6 +29,7 @@ public class GetAllEvents : IEndpoint
                 Start: item.StartTime,
                 End: item.EndTime,
                 MaxAttendees: item.MaxAttendees
-            )).ToList();
+            ))
+            .ToList();
     }
 }

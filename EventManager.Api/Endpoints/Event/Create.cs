@@ -1,10 +1,10 @@
-﻿namespace TicketToCode.Api.Endpoints;
+﻿namespace EventManager.Api.Endpoints;
+
 public class CreateEvent : IEndpoint
 {
     // Mapping
-    public static void MapEndpoint(IEndpointRouteBuilder app) => app
-        .MapPost("/events", Handle)
-        .WithSummary("Create event");
+    public static void MapEndpoint(IEndpointRouteBuilder app) =>
+        app.MapPost("/events", Handle).WithSummary("Create event");
 
     // Request and Response types
     // Why do we need these? check this video if you are not sure
@@ -16,7 +16,8 @@ public class CreateEvent : IEndpoint
         DateTime Start,
         DateTime End,
         int MaxAttendees
-        );
+    );
+
     public record Response(int id);
 
     //Logic
@@ -33,11 +34,9 @@ public class CreateEvent : IEndpoint
         ev.EndTime = request.End;
         ev.MaxAttendees = request.MaxAttendees;
 
-
         // Todo: does this set id on ev-object?
-        db.Events.Add(ev); 
+        db.Events.Add(ev);
 
         return TypedResults.Ok(new Response(ev.Id));
     }
 }
-

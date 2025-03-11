@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TicketToCode.Core\TicketToCode.Core.csproj" />
+    <ProjectReference Include="..\EventManager.Core\EventManager.Core.csproj" />
   </ItemGroup>
 
 </Project>

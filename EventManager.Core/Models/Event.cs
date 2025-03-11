@@ -1,4 +1,5 @@
-﻿namespace TicketToCode.Core.Models;
+﻿namespace EventManager.Core.Models;
+
 public class Event
 {
     public int Id { get; set; }
@@ -15,5 +16,5 @@ public enum EventType
     Concert = 0,
     Festival,
     Theatre,
-    Other
+    Other,
 }

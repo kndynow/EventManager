@@ -1,6 +1,6 @@
-﻿using TicketToCode.Core.Models;
+﻿using EventManager.Core.Models;
 
-namespace TicketToCode.Core.Data;
+namespace EventManager.Core.Data;
 
 public interface IDatabase
 {
