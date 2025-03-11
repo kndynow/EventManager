@@ -1,4 +1,4 @@
-﻿namespace TicketToCode.Api.Endpoints;
+﻿namespace EventManager.Api.Endpoints;
 
 public interface IEndpoint
 {
