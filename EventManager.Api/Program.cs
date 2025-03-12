@@ -1,6 +1,6 @@
 using EventManager.Api.Endpoints;
-using EventManager.Api.Services;
 using EventManager.Core.Data;
+using EventManager.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
