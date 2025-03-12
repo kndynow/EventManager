@@ -1,0 +1,30 @@
+﻿@using Models.ViewModels;
+
+<EditForm Model="@LoginViewModel" >
+    <DataAnnotationsValidator />
+
+    <div>
+        <label for="UserName">Username:</label>
+        <InputText id="UserName" @bind-Value="LoginViewModel.UserName" />
+        <ValidationMessage For="@(() => LoginViewModel.UserName)"/>
+    </div>
+
+    <div>
+        <label for="password">Password:</label>
+        <InputText id="password" type="password" @bind-Value="LoginViewModel.Password"/>
+        <ValidationMessage For="@(() => LoginViewModel.Password)"/>
+    </div>
+
+    <button type="submit">Log In</button>
+
+
+    <p>Don't have an account?</p>
+    <button type="submit">Sign up</button>
+    
+</EditForm>
+
+
+@code {
+    [SupplyParameterFromForm]
+    private LoginViewModel LoginViewModel { get; set; } = new LoginViewModel();
+}
