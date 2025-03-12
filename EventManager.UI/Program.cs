@@ -1,3 +1,6 @@
+using EventManager.UI.Configuration;
+using Microsoft.Extensions.Options;
+
 namespace EventManager.UI;
 
 public class Program
@@ -7,11 +10,16 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        builder.Services.AddRazorComponents()
-            .AddInteractiveServerComponents();
+        builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
         // Sets the base address for the EventManager.API.
-        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7206/") });
+        builder.Services.Configure<ApiConfig>(builder.Configuration.GetSection("ApiSettings"));
+
+        builder.Services.AddScoped(sp =>
+        {
+            var apiSettings = sp.GetRequiredService<IOptions<ApiConfig>>();
+            return new HttpClient { BaseAddress = new Uri(apiSettings.Value.BaseUrl) };
+        });
 
         var app = builder.Build();
 
@@ -28,8 +36,7 @@ public class Program
         app.UseAntiforgery();
 
         app.MapStaticAssets();
-        app.MapRazorComponents<App>()
-            .AddInteractiveServerRenderMode();
+        app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
         app.Run();
     }

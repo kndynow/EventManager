@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 // Default mapping is /openapi/v1.json
+
 builder.Services.AddOpenApi();
 
 builder.Services.AddSingleton<IDatabase, Database>();
