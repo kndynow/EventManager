@@ -29,6 +29,8 @@ public class AuthService : IAuthService
         return new User(user.Username, user.Role);
     }
 
+    //TODO: Refractor for better readability
+    // Maybe create a create a IValidator / Validator?
     public User? Register(string username, string password)
     {
         if (
