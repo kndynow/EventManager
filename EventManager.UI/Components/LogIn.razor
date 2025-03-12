@@ -1,30 +1,57 @@
 ﻿@using Models.ViewModels;
 
-<EditForm Model="@LoginViewModel" >
-    <DataAnnotationsValidator />
+<EditForm Model="@LoginViewModel" OnValidSubmit="HandleLogin">
+	<div class="container">
+		<DataAnnotationsValidator />
 
-    <div>
-        <label for="UserName">Username:</label>
-        <InputText id="UserName" @bind-Value="LoginViewModel.UserName" />
-        <ValidationMessage For="@(() => LoginViewModel.UserName)"/>
-    </div>
+		<h1>Login</h1>
+		<div class="form-group">
+			<label for="UserName">Username:</label>
+			<InputText class="input" id="UserName" @bind-Value="LoginViewModel.UserName" />
+			<ValidationMessage For="@(() => LoginViewModel.UserName)" />
+		</div>
 
-    <div>
-        <label for="password">Password:</label>
-        <InputText id="password" type="password" @bind-Value="LoginViewModel.Password"/>
-        <ValidationMessage For="@(() => LoginViewModel.Password)"/>
-    </div>
+		<div class="form-group">
+			<label for="password">Password:</label>
+			<InputText class="input" id="password" type="password" @bind-Value="LoginViewModel.Password"/>
+			<ValidationMessage For="@(() => LoginViewModel.Password)" />
+		</div>
 
-    <button type="submit">Log In</button>
+		<button type="submit" class="login-btn">Log In</button>
 
+		@if (!string.IsNullOrEmpty(Message))
+		{
+			<p>@Message</p>
+		}
+		<div class="form-group sign-up-group">
+			<p>Don't have an account?</p>
+			<button type="button" class="signup-btn" @onclick="GoToSignUp">Sign up</button>
+		</div>
+	</div>
 
-    <p>Don't have an account?</p>
-    <button type="submit">Sign up</button>
-    
 </EditForm>
 
 
 @code {
-    [SupplyParameterFromForm]
-    private LoginViewModel LoginViewModel { get; set; } = new LoginViewModel();
+	[SupplyParameterFromForm]
+	private LoginViewModel LoginViewModel { get; set; } = new LoginViewModel();
+	private string? Message;
+
+	private async Task HandleLogin()
+	{
+		var isSuccess = await MockApiLogin(LoginViewModel.UserName, LoginViewModel.Password);
+
+		Message = isSuccess ? "Login successful!" : "Invalid username or password.";
+	}
+
+	private async Task<bool> MockApiLogin(string? username, string? password)
+	{
+		// Super simple mock — replace with real logic later
+		return username == "admin" && password == "password123";
+	}
+
+	public void GoToSignUp()
+	{
+		//Navigate to sign-up page
+	}
 }
