@@ -32,7 +32,8 @@ else
         try
         {
             Console.WriteLine("Fetching data...");
-            Event = await HttpClient.GetFromJsonAsync<List<Event>>("https://localhost:7206/events");
+            @* Event = await HttpClient.GetFromJsonAsync<List<Event>>("https://localhost:7206/events"); *@
+            Event = await HttpClient.GetFromJsonAsync<List<Event>>("events");
 
             Console.WriteLine($"Fetched {Event.Count} events.");
         }
