@@ -1,4 +1,4 @@
-using EventManager.Api.Services;
+using EventManager.Core.Services;
 
 namespace EventManager.Api.Endpoints.Auth;
 

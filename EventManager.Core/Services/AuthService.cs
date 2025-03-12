@@ -1,7 +1,7 @@
 using EventManager.Core.Data;
 using EventManager.Core.Models;
 
-namespace EventManager.Api.Services;
+namespace EventManager.Core.Services;
 
 public interface IAuthService
 {
@@ -9,10 +9,6 @@ public interface IAuthService
     User? Register(string username, string password);
 }
 
-// TODO: Implement better auth
-/// <summary>
-/// Simple auth service to enable registering and login in, should be replaced before release
-/// </summary>
 public class AuthService : IAuthService
 {
     private readonly IDatabase _database;
@@ -35,7 +31,10 @@ public class AuthService : IAuthService
 
     public User? Register(string username, string password)
     {
-        if (_database.Users.Any(u => u.Username == username))
+        if (
+            _database.Users.Any(u => u.Username == username || string.IsNullOrWhiteSpace(username))
+            || string.IsNullOrWhiteSpace(password)
+        )
         {
             return null;
         }
