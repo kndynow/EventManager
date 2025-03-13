@@ -2,7 +2,7 @@ namespace EventManager.Core.Models;
 
 public class User
 {
-    public int Id { get; set; }
+    public Guid Id { get; init; } = Guid.NewGuid();
     public string Username { get; set; }
     public string PasswordHash { get; set; }
     public string Role { get; set; } = UserRoles.User; // Default role
