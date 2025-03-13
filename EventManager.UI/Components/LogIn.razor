@@ -17,15 +17,16 @@
 			<ValidationMessage For="@(() => LoginViewModel.Password)" />
 		</div>
 
-		<button type="submit" class="login-btn">Log In</button>
+		<button type="submit" class="btn login-btn">Log In</button>
 
 		@if (!string.IsNullOrEmpty(Message))
 		{
 			<p>@Message</p>
 		}
+
 		<div class="form-group sign-up-group">
 			<p>Don't have an account?</p>
-			<button type="button" class="signup-btn" @onclick="GoToSignUp">Sign up</button>
+			<button type="button" class="btn signup-btn" @onclick="GoToSignUp">Sign up</button>
 		</div>
 	</div>
 
