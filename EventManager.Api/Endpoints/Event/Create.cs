@@ -1,4 +1,6 @@
-﻿namespace EventManager.Api.Endpoints;
+﻿using System.Threading.Tasks;
+
+namespace EventManager.Api.Endpoints;
 
 public class CreateEvent : IEndpoint
 {
@@ -18,10 +20,10 @@ public class CreateEvent : IEndpoint
         int MaxAttendees
     );
 
-    public record Response(int id);
+    public record Response(string id);
 
     //Logic
-    private static Ok<Response> Handle(Request request, IDatabase db)
+    private static async Task<Ok<Response>> Handle(Request request, EventRepository repo)
     {
         // Todo, use a better constructor that enforces setting all necessary properties
         var ev = new Event();
@@ -34,8 +36,8 @@ public class CreateEvent : IEndpoint
         ev.EndTime = request.End;
         ev.MaxAttendees = request.MaxAttendees;
 
-        // Todo: does this set id on ev-object?
-        db.Events.Add(ev);
+        
+        await repo.CreateAsync(ev);
 
         return TypedResults.Ok(new Response(ev.Id));
     }
