@@ -8,7 +8,7 @@ public class GetAllEvents : IEndpoint
 
     // Request and Response types
     public record Response(
-        int Id,
+        string Id,
         string Name,
         string Description,
         EventType Type,

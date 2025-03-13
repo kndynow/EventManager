@@ -7,10 +7,10 @@ public class GetEvent : IEndpoint
         app.MapGet("/events/{id}", Handle).WithSummary("Get event");
 
     // Request and Response types
-    public record Request(int Id);
+    public record Request(string Id);
 
     public record Response(
-        int Id,
+        string Id,
         string Name,
         string Description,
         EventType Type,
