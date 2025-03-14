@@ -31,6 +31,7 @@ namespace EventManager.Core.Data
             var database = client.GetDatabase(settings.DatabaseName);
             _users = database.GetCollection<User>("Users");
         }
+
         public async Task<User?> GetByUsernameAsync(string username)
         {
             return await _users.Find(user => user.Username == username).FirstOrDefaultAsync();
