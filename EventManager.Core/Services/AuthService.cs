@@ -1,5 +1,6 @@
 using EventManager.Core.Data;
 using EventManager.Core.Models;
+using EventManager.Core.Validator;
 using System.Threading.Tasks;
 
 namespace EventManager.Core.Services;
@@ -13,11 +14,13 @@ public interface IAuthService
 
 public class AuthService : IAuthService
 {
+    private readonly IUserValidator _userValidator;
     private readonly IAuthRepository _authRepository;
 
-    public AuthService(IAuthRepository authRepository)
+    public AuthService(IAuthRepository authRepository, IUserValidator userValidator)
     {
         _authRepository = authRepository;
+        _userValidator = userValidator;
     }
 
     public async Task<User?> Login(string username, string password)
@@ -35,9 +38,14 @@ public class AuthService : IAuthService
     // TODO: Create validator for user registration via Validator/IValidator
     public async Task<User?> Register(string username, string password)
     {
-        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        if (!_userValidator.IsValidUsername(username))
         {
-            return null; // Invalid username or password
+            return null;
+        }
+
+        if(!_userValidator.IsValidPassword(password))
+        {
+            return null;
         }
 
         //Returns null if username already exists in database
