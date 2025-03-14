@@ -25,6 +25,12 @@ namespace EventManager.Core.Data
             _events = database.GetCollection<Event>("Events");
         }
 
+        //Fetches all events and returns it as a list of Event objects
+        public async Task<IEnumerable<Event>> GetAllAsync()
+        {
+            return await _events.Find(_ => true).ToListAsync();
+        }
+
         public async Task CreateAsync(Event newEvent)
         {
             await _events.InsertOneAsync(newEvent);
@@ -32,11 +38,6 @@ namespace EventManager.Core.Data
 
         public async Task<Event> GetByIdAsync(string id)
         {
-            if (!ObjectId.TryParse(id, out _))
-            {
-                return null; // Invalid ID format, return null so the endpoint can handle it
-            }
-
             return await _events.Find(e => e.Id == id).FirstOrDefaultAsync();
         }
     }

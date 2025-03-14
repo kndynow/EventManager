@@ -19,6 +19,11 @@ namespace EventManager.Core.Services
             _eventRepository = eventRepository;
         }
 
+        public async Task<IEnumerable<Event>> GetAllEventsAsync()
+        {
+            return await _eventRepository.GetAllAsync();
+        }
+
         public async Task<string> CreateEventAsync(Event newEvent)
         {
             await _eventRepository.CreateAsync(newEvent);
