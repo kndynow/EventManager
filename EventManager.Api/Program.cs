@@ -9,9 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
-//Remove this when MongoDb is set up correctly
-builder.Services.AddSingleton<IDatabase, Database>();
-
 // Access MongoDB connection string from environment variable
 var mongoConnectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING");
 
