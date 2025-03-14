@@ -11,5 +11,6 @@ namespace EventManager.Core.Data
     {
         Task CreateAsync(Event newEvent);
         Task<Event> GetByIdAsync(string id);
+        Task<IEnumerable<Event>> GetAllAsync();
     }
 }
