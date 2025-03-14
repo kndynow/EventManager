@@ -24,8 +24,8 @@ builder.Services.Configure<MongoDbSettings>(options =>
     options.DatabaseName = builder.Configuration["MongoDbSettings:DatabaseName"];  // From appsettings
 });
 
-// Set up MongoDB connection using MongoDbSettings
-builder.Services.AddSingleton<EventRepository>();
+builder.Services.AddSingleton<IEventRepository, EventRepository>();
+builder.Services.AddSingleton<IEventService, EventService>();
 
 // Add cookie authentication
 builder
