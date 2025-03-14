@@ -2,6 +2,7 @@ using EventManager.Api.Endpoints;
 using EventManager.Core;
 using EventManager.Core.Data;
 using EventManager.Core.Services;
+using EventManager.Core.Validator;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
@@ -20,11 +21,14 @@ builder.Services.Configure<MongoDbSettings>(options =>
 });
 
 builder.Services.AddSingleton<IEventRepository, EventRepository>();
-builder.Services.AddSingleton<IEventService, EventService>();
 builder.Services.AddSingleton<IAuthRepository, AuthRepository>();
-builder.Services.AddSingleton<IAuthService, AuthService>();
 
-// Add cookie authentication
+//Probably change to scoped if switching to JWT
+builder.Services.AddSingleton<IUserValidator, UserValidator>();
+builder.Services.AddSingleton<IAuthService, AuthService>();
+builder.Services.AddSingleton<IEventService, EventService>();
+
+// Cookie authentication (might switch to JWT later)
 builder
     .Services.AddAuthentication("Cookies")
     .AddCookie(
