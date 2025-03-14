@@ -12,8 +12,6 @@ builder.Services.AddOpenApi();
 //Remove this when MongoDb is set up correctly
 builder.Services.AddSingleton<IDatabase, Database>();
 
-builder.Services.AddScoped<IAuthService, AuthService>();
-
 // Access MongoDB connection string from environment variable
 var mongoConnectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING");
 
@@ -26,6 +24,8 @@ builder.Services.Configure<MongoDbSettings>(options =>
 
 builder.Services.AddSingleton<IEventRepository, EventRepository>();
 builder.Services.AddSingleton<IEventService, EventService>();
+builder.Services.AddSingleton<IAuthRepository, AuthRepository>();
+builder.Services.AddSingleton<IAuthService, AuthService>();
 
 // Add cookie authentication
 builder
