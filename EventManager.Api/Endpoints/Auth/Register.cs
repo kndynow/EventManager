@@ -14,15 +14,17 @@ public class Register : IEndpoint
     public record Response(string Username, string Role);
 
     // Logic
-    private static Results<Ok<Response>, BadRequest<string>> Handle(
+    private static async Task<IResult> Handle(
         Request request,
         IAuthService authService
     )
+
     {
-        var result = authService.Register(request.Username, request.Password);
+        var result = await authService.Register(request.Username, request.Password);
+
         if (result == null)
         {
-            return TypedResults.BadRequest("Username already exists");
+            return TypedResults.BadRequest("Invalid username and password or the username already exists.");
         }
         var response = new Response(result.Username, result.Role);
         return TypedResults.Ok(response);

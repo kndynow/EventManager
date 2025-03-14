@@ -16,13 +16,14 @@ public class Login : IEndpoint
     public record Response(string Username, string Role);
 
     // Logic
-    private static Results<Ok<Response>, NotFound<string>> Handle(
+    private static async Task<IResult> Handle(
         Request request,
         IAuthService authService,
         HttpContext context
     )
     {
-        var result = authService.Login(request.Username, request.Password);
+        var result = await authService.Login(request.Username, request.Password);
+
         if (result == null)
         {
             return TypedResults.NotFound("Invalid username or password");
@@ -34,6 +35,7 @@ public class Login : IEndpoint
             $"{result.Username}:{result.Role}",
             new CookieOptions
             {
+                Secure = true,
                 HttpOnly = true,
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.UtcNow.AddDays(7),

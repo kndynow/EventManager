@@ -1,49 +1,64 @@
 using EventManager.Core.Data;
 using EventManager.Core.Models;
+using EventManager.Core.Validator;
+using System.Threading.Tasks;
 
 namespace EventManager.Core.Services;
 
 public interface IAuthService
 {
-    User? Login(string username, string password);
-    User? Register(string username, string password);
+    //User? Login(string username, string password);
+    Task<User?> Register(string username, string password);
+    Task<User?> Login(string username, string password);
 }
 
 public class AuthService : IAuthService
 {
-    private readonly IDatabase _database;
+    private readonly IUserValidator _userValidator;
+    private readonly IAuthRepository _authRepository;
 
-    public AuthService(IDatabase database)
+    public AuthService(IAuthRepository authRepository, IUserValidator userValidator)
     {
-        _database = database;
+        _authRepository = authRepository;
+        _userValidator = userValidator;
     }
 
-    public User? Login(string username, string password)
+    public async Task<User?> Login(string username, string password)
     {
-        var user = _database.Users.FirstOrDefault(u => u.Username == username);
+        var user = await _authRepository.GetByUsernameAsync(username);
+
         if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
         {
-            return null;
+            return null; //Invalid username or password
         }
 
         return new User(user.Username, user.Role);
     }
 
-    //TODO: Refractor for better readability
-    // Maybe create a create a IValidator / Validator?
-    public User? Register(string username, string password)
+    // TODO: Create validator for user registration via Validator/IValidator
+    public async Task<User?> Register(string username, string password)
     {
-        if (
-            _database.Users.Any(u => u.Username == username || string.IsNullOrWhiteSpace(username))
-            || string.IsNullOrWhiteSpace(password)
-        )
+        if (!_userValidator.IsValidUsername(username))
         {
             return null;
         }
 
-        var user = new User(username, BCrypt.Net.BCrypt.HashPassword(password));
+        if(!_userValidator.IsValidPassword(password))
+        {
+            return null;
+        }
 
-        _database.Users.Add(user);
-        return user;
+        //Returns null if username already exists in database
+        var existingUser = await _authRepository.GetByUsernameAsync(username);
+
+        if (existingUser != null)
+        {
+            return null;
+        }
+
+        var newUser = new User(username, BCrypt.Net.BCrypt.HashPassword(password));
+
+        await _authRepository.CreateAsync(newUser);
+        return newUser;
     }
 }

@@ -8,7 +8,7 @@ public class GetAllEvents : IEndpoint
 
     // Request and Response types
     public record Response(
-        int Id,
+        string Id,
         string Name,
         string Description,
         EventType Type,
@@ -18,10 +18,11 @@ public class GetAllEvents : IEndpoint
     );
 
     //Logic
-    private static List<Response> Handle(IDatabase db)
+    private static async Task<IEnumerable<Response>> Handle(IEventService eventService)
     {
-        return db
-            .Events.Select(item => new Response(
+        var events = await eventService.GetAllEventsAsync();
+
+        return events.Select(item => new Response(
                 Id: item.Id,
                 Name: item.Name,
                 Description: item.Description,
