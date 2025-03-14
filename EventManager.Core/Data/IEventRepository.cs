@@ -10,5 +10,6 @@ namespace EventManager.Core.Data
     public interface IEventRepository
     {
         Task CreateAsync(Event newEvent);
+        Task<Event> GetByIdAsync(string id);
     }
 }
