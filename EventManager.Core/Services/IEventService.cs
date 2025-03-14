@@ -9,6 +9,7 @@ namespace EventManager.Core.Services
 {
     public interface IEventService
     {
+        Task<IEnumerable<Event>> GetAllEventsAsync();
         Task<string> CreateEventAsync(Event newEvent);
         Task<Event> GetEventByIdAsync(string id);
     }
