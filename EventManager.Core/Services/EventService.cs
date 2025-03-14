@@ -24,5 +24,17 @@ namespace EventManager.Core.Services
             await _eventRepository.CreateAsync(newEvent);
             return newEvent.Id;
         }
+
+        public async Task<Event> GetEventByIdAsync(string id)
+        {
+            var ev = await _eventRepository.GetByIdAsync(id);
+
+            if (ev == null)
+            {
+                throw new KeyNotFoundException("Event not found.");
+            }
+
+            return ev;
+        }
     }
 }
