@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 using EventManager.Core.Models;
 
 namespace EventManager.Core.Validator
-{
+
+{    public interface IEventValidator
+    {
+        bool CheckIfValidEvent(Event ev);
+    }
+
     public class EventValidator : IEventValidator
     {
         //Very simple eventvalidator, can add more logic later
