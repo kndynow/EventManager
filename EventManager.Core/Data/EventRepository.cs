@@ -9,8 +9,11 @@ using System.Threading.Tasks;
 
 namespace EventManager.Core.Data
 {
-    public class EventRepository
+    public class EventRepository : IEventRepository
     {
+        // Handles interactions with the MongoDB database for event-related data.
+        // It connects to the MongoDB server using the connection string and database name from the MongoDbSettings-class.
+        
         private readonly IMongoCollection<Event> _events;
 
         public EventRepository(IOptions<MongoDbSettings> options)
