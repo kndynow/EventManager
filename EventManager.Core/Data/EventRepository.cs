@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace EventManager.Core.Data
 {
@@ -27,6 +28,16 @@ namespace EventManager.Core.Data
         public async Task CreateAsync(Event newEvent)
         {
             await _events.InsertOneAsync(newEvent);
+        }
+
+        public async Task<Event> GetByIdAsync(string id)
+        {
+            if (!ObjectId.TryParse(id, out _))
+            {
+                return null; // Invalid ID format, return null so the endpoint can handle it
+            }
+
+            return await _events.Find(e => e.Id == id).FirstOrDefaultAsync();
         }
     }
 }

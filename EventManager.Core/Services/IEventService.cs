@@ -10,5 +10,6 @@ namespace EventManager.Core.Services
     public interface IEventService
     {
         Task<string> CreateEventAsync(Event newEvent);
+        Task<Event> GetEventByIdAsync(string id);
     }
 }
