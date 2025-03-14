@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EventManager.Core.Models;
+using EventManager.Core.Validator;
 
 namespace EventManager.Core.Services
 {
@@ -19,10 +20,12 @@ namespace EventManager.Core.Services
     public class EventService : IEventService
     {
         private readonly IEventRepository _eventRepository;
+        private readonly IEventValidator _eventValidator;
 
-        public EventService(IEventRepository eventRepository)
+        public EventService(IEventRepository eventRepository, IEventValidator eventValidator)
         {
             _eventRepository = eventRepository;
+            _eventValidator = eventValidator;
         }
 
         public async Task<IEnumerable<Event>> GetAllEventsAsync()
@@ -32,6 +35,11 @@ namespace EventManager.Core.Services
 
         public async Task<string> CreateEventAsync(Event newEvent)
         {
+            if (!_eventValidator.CheckIfValidEvent(newEvent))
+            {
+                throw new ArgumentException("The event data is not valid.");
+            }
+
             await _eventRepository.CreateAsync(newEvent);
             return newEvent.Id;
         }

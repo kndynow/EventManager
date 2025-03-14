@@ -22,9 +22,11 @@ builder.Services.Configure<MongoDbSettings>(options =>
 
 builder.Services.AddSingleton<IEventRepository, EventRepository>();
 builder.Services.AddSingleton<IAuthRepository, AuthRepository>();
+builder.Services.AddTransient<IUserValidator, UserValidator>();
+builder.Services.AddTransient<IEventValidator, EventValidator>();
+
 
 //Probably change to scoped if switching to JWT
-builder.Services.AddSingleton<IUserValidator, UserValidator>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddSingleton<IEventService, EventService>();
 
