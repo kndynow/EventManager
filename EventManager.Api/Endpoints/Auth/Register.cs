@@ -24,7 +24,7 @@ public class Register : IEndpoint
 
         if (result == null)
         {
-            return TypedResults.BadRequest("Username already exists");
+            return TypedResults.BadRequest("Invalid username and password or the username already exists.");
         }
         var response = new Response(result.Username, result.Role);
         return TypedResults.Ok(response);
