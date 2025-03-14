@@ -38,11 +38,13 @@ namespace EventManager.Core.Data
             return await _events.Find(_ => true).ToListAsync();
         }
 
+        //Create event
         public async Task CreateAsync(Event newEvent)
         {
             await _events.InsertOneAsync(newEvent);
         }
 
+        //Get event by id
         public async Task<Event> GetByIdAsync(string id)
         {
             return await _events.Find(e => e.Id == id).FirstOrDefaultAsync();
