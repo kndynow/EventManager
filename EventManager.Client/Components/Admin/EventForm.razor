@@ -1,0 +1,84 @@
+﻿<EditForm Model="Event" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group mb-3">
+        <label for="name">Name</label>
+        <InputText id="name" class="form-control" @bind-Value="Event.Name" placeholder="Enter event name" />
+        <ValidationMessage For="@(() => Event.Name)" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="desc">Description</label>
+        <InputTextArea id="desc" class="form-control" @bind-Value="Event.Description" placeholder="Enter description" />
+        <ValidationMessage For="@(() => Event.Description)" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="timestart">Event Start</label>
+        <InputDate id="timestart" class="form-control" @bind-Value="Event.Start" />
+        <ValidationMessage For="@(() => Event.Start)" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="timeend">Event End</label>
+        <InputDate id="timeend" class="form-control" @bind-Value="Event.End" />
+        <ValidationMessage For="@(() => Event.End)" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="attendees">Maximum Attendees</label>
+        <InputNumber id="attendees" class="form-control" @bind-Value="Event.MaxAttendees" />
+        <ValidationMessage For="@(() => Event.MaxAttendees)" />
+    </div>
+
+    <div class="button-group mt-4">
+        <button type="submit" class="btn btn-primary me-2">
+            @(IsNew ? "Publish Event" : "Save Changes")
+        </button>
+
+        <button type="button" class="btn btn-secondary me-2" @onclick="OnCancel">
+            Cancel
+        </button>
+
+        @if (!IsNew)
+        {
+            <button type="button" class="btn btn-danger" @onclick="HandleDelete">
+                Delete Event
+            </button>
+        }
+    </div>
+</EditForm>
+
+@code {
+    [Parameter, EditorRequired]
+    public Event Event { get; set; }
+
+    [Parameter]
+    public bool IsNew { get; set; } = true;
+
+    [Parameter]
+    public EventCallback<Event> OnSubmit { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDelete { get; set; }
+
+    private async Task HandleSubmit()
+    {
+        if (Event != null)
+        {
+            await OnSubmit.InvokeAsync(Event);
+        }
+    }
+
+    private async Task HandleDelete()
+    {
+        if (Event != null && !IsNew)
+        {
+            await OnDelete.InvokeAsync(Event.Id);
+        }
+    }
+}

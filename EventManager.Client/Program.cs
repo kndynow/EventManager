@@ -1,5 +1,4 @@
 using EventManager.Client;
-using EventManager.Client.Models;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
