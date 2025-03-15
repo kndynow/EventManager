@@ -1,0 +1,34 @@
+﻿<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Event Start</th>
+            <th>Event End</th>
+            <th>Maximum Attendees</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var evnt in Events)
+        {
+            <tr>
+                <td>@evnt.Id</td>
+                <td>@evnt.Name</td>
+                <td>@evnt.Description</td>
+                <td>@evnt.Start</td>
+                <td>@evnt.End</td>
+                <td>@evnt.MaxAttendees</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="(() => OnEdit.InvokeAsync(evnt.Id))">Edit</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@code {
+    [Parameter]
+    public List<Event> Events { get; set; } = new List<Event>();
+    [Parameter]
+    public EventCallback<int> OnEdit { get; set; }
+
+}

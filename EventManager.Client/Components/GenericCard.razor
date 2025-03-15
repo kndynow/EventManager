@@ -1,0 +1,16 @@
+﻿@typeparam TItem
+@* Generic Card Component to use in different parts of the application *@
+<div class="card">
+    <div class="card-header">@HeaderTemplate</div>
+    <div class="card-body">@ChildContent</div>
+    <div class="card-footer">@FooterTemplate</div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment HeaderTemplate { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    [Parameter]
+    public RenderFragment FooterTemplate { get; set; }
+}
