@@ -62,6 +62,7 @@ mono_crash.*
 
 # Api keys and appsettings-secrets
 appsettings.*.json
+appsettings.Development.json
 !appsettings.json
 secrets.json
 

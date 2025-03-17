@@ -7,10 +7,10 @@ public class GetEvent : IEndpoint
         app.MapGet("/events/{id}", Handle).WithSummary("Get event");
 
     // Request and Response types
-    public record Request(int Id);
+    public record Request(string Id);
 
     public record Response(
-        int Id,
+        string Id,
         string Name,
         string Description,
         EventType Type,
@@ -20,11 +20,16 @@ public class GetEvent : IEndpoint
     );
 
     //Logic
-    private static Response Handle([AsParameters] Request request, IDatabase db)
+    private static async Task<IResult> Handle([AsParameters] Request request, IEventService eventService)
     {
-        var ev = db.Events.Find(ev => ev.Id == request.Id);
+        var ev = await eventService.GetEventByIdAsync(request.Id);
 
-        // map ev to response dto
+        if (ev == null)
+        {
+            return Results.NotFound($"Event with id {request.Id} not found.");
+        }
+
+        // Map ev to response dto
         var response = new Response(
             Id: ev.Id,
             Name: ev.Name,
@@ -35,6 +40,6 @@ public class GetEvent : IEndpoint
             MaxAttendees: ev.MaxAttendees
         );
 
-        return response;
+        return Results.Ok(response);
     }
 }
