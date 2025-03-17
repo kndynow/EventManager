@@ -1,12 +1,14 @@
 using EventManager.Api.Endpoints;
-using EventManager.Core;
-using EventManager.Core.Data;
 using EventManager.Core.Services;
 using EventManager.Core.Validator;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+var config = builder.Configuration;
 
 builder.Services.AddOpenApi();
 
@@ -16,7 +18,7 @@ var mongoConnectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTI
 // Configure MongoDbSettings using the environment variable
 builder.Services.Configure<MongoDbSettings>(options =>
 {
-    options.ConnectionString = mongoConnectionString;  // Get it from the environment variable
+    options.ConnectionString = mongoConnectionString;
     options.DatabaseName = builder.Configuration["MongoDbSettings:DatabaseName"];  // From appsettings
 });
 
@@ -25,23 +27,43 @@ builder.Services.AddSingleton<IAuthRepository, AuthRepository>();
 builder.Services.AddTransient<IUserValidator, UserValidator>();
 builder.Services.AddTransient<IEventValidator, EventValidator>();
 
-
 //Probably change to scoped if switching to JWT
 builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddSingleton<IEventService, EventService>();
 
-// Cookie authentication (might switch to JWT later)
-builder
-    .Services.AddAuthentication("Cookies")
-    .AddCookie(
-        "Cookies",
-        options =>
-        {
-            options.Cookie.Name = "auth";
-            options.Cookie.HttpOnly = true;
-            options.Cookie.SameSite = SameSiteMode.Strict;
-        }
-    );
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = config["JwtSettings:Issuer"],
+        ValidAudience = config["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!)),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true
+
+
+    };
+});
+
+//// Cookie authentication (might switch to JWT later)
+//builder
+//    .Services.AddAuthentication("Cookies")
+//    .AddCookie(
+//        "Cookies",
+//        options =>
+//        {
+//            options.Cookie.Name = "auth";
+//            options.Cookie.HttpOnly = true;
+//            options.Cookie.SameSite = SameSiteMode.Strict;
+//        }
+//    );
 
 builder.Services.AddAuthorization();
 

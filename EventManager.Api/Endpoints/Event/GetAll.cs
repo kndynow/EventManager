@@ -1,10 +1,14 @@
-﻿namespace EventManager.Api.Endpoints;
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace EventManager.Api.Endpoints;
 
 public class GetAllEvents : IEndpoint
 {
     // Mapping
+
     public static void MapEndpoint(IEndpointRouteBuilder app) =>
         app.MapGet("/events", Handle).WithSummary("Get all events");
+        
 
     // Request and Response types
     public record Response(
