@@ -44,25 +44,3 @@ namespace EventManager.Core.Validator
         }
     }
 }
-
-//// TODO: Create validator for user registration via Validator/IValidator
-//public async Task<User?> Register(string username, string password)
-//{
-//    if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-//    {
-//        return null; // Invalid username or password
-//    }
-
-//    //Returns null if username already exists in database
-//    var existingUser = await _authRepository.GetByUsernameAsync(username);
-
-//    if (existingUser != null)
-//    {
-//        return null;
-//    }
-
-//    var newUser = new User(username, BCrypt.Net.BCrypt.HashPassword(password));
-
-//    await _authRepository.CreateAsync(newUser);
-//    return newUser;
-//}
