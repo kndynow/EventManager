@@ -1,6 +1,6 @@
 using EventManager.Core.Services;
 
-namespace EventManager.Api.Endpoints.Auth;
+namespace EventManager.Api.Endpoints.User;
 
 public class Login : IEndpoint
 {
@@ -18,11 +18,11 @@ public class Login : IEndpoint
     // Logic
     private static async Task<IResult> Handle(
         Request request,
-        IAuthService authService,
+        IUserService userService,
         HttpContext context
     )
     {
-        var result = await authService.Login(request.Username, request.Password);
+        var result = await userService.Login(request.Username, request.Password);
 
         if (result == null)
         {
