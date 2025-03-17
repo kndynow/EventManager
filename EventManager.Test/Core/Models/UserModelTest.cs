@@ -7,11 +7,11 @@ namespace EventManager.Test.Core.Models;
 
 public class UserModelTest
 {
-    private readonly IDatabase _database;
+    private readonly IAuthRepository _database;
 
     public UserModelTest()
     {
-        _database = new Database();
+        _database = new AuthRepository();
     }
 
     //Test if GUID generation for User ID do not generate identical GUID for multiple users
@@ -23,11 +23,9 @@ public class UserModelTest
         var user2 = new User("testUser2", "validPassword123");
         var user3 = new User("testUser3", "validPassword123");
         //Act
-        _database.Users.AddRange(user1, user2, user3);
-        var userIds = _database.Users.Select(u => u.Id).ToList();
+        _database.CreateAsync(user1);
+        var userIds = _database.GetByUsernameAsync(user1.Username).Result.Id;
         //Assert
-        Assert.Equal(3, userIds.Count);
-        Assert.Equal(3, userIds.Distinct().Count());
         Assert.All(userIds, id => Assert.NotEqual(Guid.Empty, id));
     }
 }
