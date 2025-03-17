@@ -60,3 +60,8 @@ mono_crash.*
 # Local History for Visual Studio Code
 .history/
 
+# Api keys and appsettings-secrets
+appsettings.*.json
+!appsettings.json
+secrets.json
+
