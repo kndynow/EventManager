@@ -1,38 +1,27 @@
 using EventManager.Api.Endpoints;
 using EventManager.Api.Jwt;
-using EventManager.Core.Services;
 using EventManager.Core.Validator;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using MongoDB.Driver;
-using System.Text;
 using static EventManager.Api.Jwt.TokenService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using EventManager.Core;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-var config = builder.Configuration;
+// Configure MongoDB connection string
+builder
+    .Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
 
 builder.Services.AddOpenApi();
-
-// Access MongoDB connection string from environment variable
-var mongoConnectionString = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING");
-
-// Configure MongoDbSettings using the environment variable
-builder.Services.Configure<MongoDbSettings>(options =>
-{
-    options.ConnectionString = mongoConnectionString;
-    options.DatabaseName = builder.Configuration["MongoDbSettings:DatabaseName"];  // From appsettings
-});
-
-builder.Services.AddSingleton<IEventRepository, EventRepository>();
-builder.Services.AddSingleton<IAuthRepository, AuthRepository>();
-builder.Services.AddTransient<IUserValidator, UserValidator>();
-builder.Services.AddTransient<IEventValidator, EventValidator>();
+builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddSingleton<ITokenService, TokenService>();
-
-//Probably change to scoped if switching to JWT
-builder.Services.AddSingleton<IAuthService, AuthService>();
-builder.Services.AddSingleton<IEventService, EventService>();
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IEventService, EventService>(); 
+builder.Services.AddSingleton<IEventRepository, EventRepository>();
+builder.Services.AddSingleton<IUserValidator, UserValidator>();
+builder.Services.AddSingleton<IEventValidator, EventValidator>(); 
 
 builder.Services.AddAuthentication(options =>
 {
@@ -46,28 +35,15 @@ builder.Services.AddAuthentication(options =>
 
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = config["JwtSettings:Issuer"],
-        ValidAudience = config["JwtSettings:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!)),
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"])),
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true
     };
 });
-
-//// Cookie authentication (might switch to JWT later)
-//builder
-//    .Services.AddAuthentication("Cookies")
-//    .AddCookie(
-//        "Cookies",
-//        options =>
-//        {
-//            options.Cookie.Name = "auth";
-//            options.Cookie.HttpOnly = true;
-//            options.Cookie.SameSite = SameSiteMode.Strict;
-//        }
-//    );
 
 builder.Services.AddAuthorization();
 

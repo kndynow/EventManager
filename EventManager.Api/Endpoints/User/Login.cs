@@ -1,8 +1,7 @@
 using EventManager.Core.Services;
-
 using static EventManager.Api.Jwt.TokenService;
 
-namespace EventManager.Api.Endpoints.Auth;
+namespace EventManager.Api.Endpoints.User;
 
 public class Login : IEndpoint
 {
@@ -20,10 +19,11 @@ public class Login : IEndpoint
     // Logic
     private static async Task<IResult> Handle(
         Request request,
-        IAuthService authService,
-        ITokenService tokenService)
+        IUserService userService,
+        ITokenService tokenService
+    )
     {
-        var user = await authService.Login(request.Username, request.Password);
+        var user = await userService.Login(request.Username, request.Password);
 
         if (user == null)
         {

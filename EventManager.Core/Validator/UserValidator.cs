@@ -1,9 +1,9 @@
-﻿using EventManager.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EventManager.Core.Models;
 
 namespace EventManager.Core.Validator
 {
@@ -12,6 +12,7 @@ namespace EventManager.Core.Validator
         bool IsValidPassword(string password);
         bool IsValidUsername(string userName);
     }
+
     public class UserValidator : IUserValidator
     {
         public bool IsValidUsername(string userName)

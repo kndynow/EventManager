@@ -1,4 +1,5 @@
 ﻿@using Models.ViewModels;
+@using Models.Jwt;
 @inject HttpClient httpClient;
 
 <EditForm Model="@LoginViewModel" OnValidSubmit="HandleLogin">
@@ -41,7 +42,20 @@
 
 	private async Task HandleLogin()
 	{
-		var response = await httpClient.PostAsJsonAsync("")
+		var response = await httpClient.PostAsJsonAsync("https://localhost:7206/auth/login", new
+		{
+			Username = LoginViewModel.UserName,
+			Password = LoginViewModel.Password
+		});
+
+		if(response.IsSuccessStatusCode)
+		{
+			var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+			if(result != null)
+			{
+
+			}
+		}
 
 
 		var isSuccess = await MockApiLogin(LoginViewModel.UserName, LoginViewModel.Password);
