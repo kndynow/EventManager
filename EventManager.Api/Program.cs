@@ -1,19 +1,26 @@
 using EventManager.Api.Endpoints;
-using EventManager.Core.Data;
-using EventManager.Core.Services;
+using EventManager.Core;
+using EventManager.Core.Validator;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-// Default mapping is /openapi/v1.json
+// Configure MongoDB connection string
+builder
+    .Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
 
 builder.Services.AddOpenApi();
+builder.Services.AddSingleton<MongoDbContext>();
+builder.Services.AddSingleton<IEventRepository, EventRepository>();
+builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUserValidator, UserValidator>();
+builder.Services.AddTransient<IEventValidator, EventValidator>();
 
-builder.Services.AddSingleton<IDatabase, Database>();
-builder.Services.AddScoped<IAuthService, AuthService>();
+//Probably change to scoped if switching to JWT
+builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IEventService, EventService>();
 
-// Add cookie authentication
+// Cookie authentication (might switch to JWT later)
 builder
     .Services.AddAuthentication("Cookies")
     .AddCookie(
