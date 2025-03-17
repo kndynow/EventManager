@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 ﻿@using Models.Login;
 @using Models.Jwt;
 @inject HttpClient httpClient;
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
+=======
+﻿@using Models.ViewModels;
+@inject HttpClient httpClient;
+>>>>>>> 59fd1c9 (Added files which weren't tracked during the last commit.)
 
 <EditForm Model="@LoginViewModel" OnValidSubmit="HandleLogin">
 	<div class="container">
@@ -43,12 +48,20 @@
 	private string? Message;
 
 	private async Task HandleLogin()
+<<<<<<< HEAD
 	{
 		var response = await httpClient.PostAsJsonAsync("https://localhost:7206/auth/login", new
 		{
 			Username = LoginViewModel.UserName,
 			Password = LoginViewModel.Password
 		});
+=======
+	{
+		var response = await httpClient.PostAsJsonAsync("")
+
+
+		var isSuccess = await MockApiLogin(LoginViewModel.UserName, LoginViewModel.Password);
+>>>>>>> 59fd1c9 (Added files which weren't tracked during the last commit.)
 
 		if (response.IsSuccessStatusCode)
 		{

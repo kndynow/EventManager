@@ -44,4 +44,8 @@ namespace EventManager.Core.Validator
             return true;
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 59fd1c9 (Added files which weren't tracked during the last commit.)
