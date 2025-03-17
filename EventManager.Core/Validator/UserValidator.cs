@@ -1,9 +1,9 @@
-﻿using EventManager.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EventManager.Core.Models;
 
 namespace EventManager.Core.Validator
 {
@@ -12,6 +12,7 @@ namespace EventManager.Core.Validator
         bool IsValidPassword(string password);
         bool IsValidUsername(string userName);
     }
+
     public class UserValidator : IUserValidator
     {
         public bool IsValidUsername(string userName)
@@ -44,25 +45,3 @@ namespace EventManager.Core.Validator
         }
     }
 }
-
-//// TODO: Create validator for user registration via Validator/IValidator
-//public async Task<User?> Register(string username, string password)
-//{
-//    if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-//    {
-//        return null; // Invalid username or password
-//    }
-
-//    //Returns null if username already exists in database
-//    var existingUser = await _authRepository.GetByUsernameAsync(username);
-
-//    if (existingUser != null)
-//    {
-//        return null;
-//    }
-
-//    var newUser = new User(username, BCrypt.Net.BCrypt.HashPassword(password));
-
-//    await _authRepository.CreateAsync(newUser);
-//    return newUser;
-//}

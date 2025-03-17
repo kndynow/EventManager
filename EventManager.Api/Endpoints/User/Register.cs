@@ -1,6 +1,6 @@
 using EventManager.Core.Services;
 
-namespace EventManager.Api.Endpoints.Auth;
+namespace EventManager.Api.Endpoints.User;
 
 public class Register : IEndpoint
 {
@@ -14,17 +14,15 @@ public class Register : IEndpoint
     public record Response(string Username, string Role);
 
     // Logic
-    private static async Task<IResult> Handle(
-        Request request,
-        IAuthService authService
-    )
-
+    private static async Task<IResult> Handle(Request request, IUserService userService)
     {
-        var result = await authService.Register(request.Username, request.Password);
+        var result = await userService.Register(request.Username, request.Password);
 
         if (result == null)
         {
-            return TypedResults.BadRequest("Invalid username and password or the username already exists.");
+            return TypedResults.BadRequest(
+                "Invalid username and password or the username already exists."
+            );
         }
         var response = new Response(result.Username, result.Role);
         return TypedResults.Ok(response);

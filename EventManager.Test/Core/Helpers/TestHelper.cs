@@ -24,9 +24,9 @@ public class TestHelper
     /// var users = db.Users.ToList(); // Contains predefined test users
     /// </code>
     /// </example>
-    public static IDatabase CreateTestDatabase()
+    public static IAuthRepository CreateTestDatabase()
     {
-        var database = new Database();
+        var database = new AuthRepository();
         GenerateTestData(database);
         return database;
     }
