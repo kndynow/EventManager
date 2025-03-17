@@ -1,6 +1,7 @@
 using System.Text;
 using EventManager.Api.Endpoints;
 <<<<<<< HEAD
+<<<<<<< HEAD
 using EventManager.Api.Jwt;
 using EventManager.Core;
 using EventManager.Core.Validator;
@@ -8,6 +9,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using static EventManager.Api.Jwt.TokenService;
 =======
+=======
+using EventManager.Api.Jwt;
+>>>>>>> 1aa3bc0 (Created TokenService which generates a JWT-token on succesful login in the Login-endpoint.)
 using EventManager.Core.Services;
 using EventManager.Core.Validator;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,7 +19,11 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using System.Text;
+<<<<<<< HEAD
 >>>>>>> b7db955 (Setting up the Jwt Authentication with token validation parameters.)
+=======
+using static EventManager.Api.Jwt.TokenService;
+>>>>>>> 1aa3bc0 (Created TokenService which generates a JWT-token on succesful login in the Login-endpoint.)
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -82,6 +90,7 @@ builder.Services.AddSingleton<IEventRepository, EventRepository>();
 builder.Services.AddSingleton<IAuthRepository, AuthRepository>();
 builder.Services.AddTransient<IUserValidator, UserValidator>();
 builder.Services.AddTransient<IEventValidator, EventValidator>();
+builder.Services.AddSingleton<ITokenService, TokenService>();
 
 //Probably change to scoped if switching to JWT
 builder.Services.AddSingleton<IAuthService, AuthService>();
@@ -94,6 +103,9 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
+    //In production = true
+    //options.RequireHttpsMetadata = true;
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidIssuer = config["JwtSettings:Issuer"],
@@ -103,8 +115,6 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true
-
-
     };
 });
 
