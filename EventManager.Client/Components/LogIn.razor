@@ -1,8 +1,10 @@
 ﻿@using Models.Login;
 @using Models.Jwt;
+@using Services;
 @inject HttpClient httpClient;
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
+@inject CustomAuthenticationStateProvider AuthStateProvider; 
 
 <EditForm Model="@LoginViewModel" OnValidSubmit="HandleLogin">
 	<div class="container">
@@ -36,7 +38,6 @@
 
 </EditForm>
 
-
 @code {
 	[SupplyParameterFromForm]
 	private LoginViewModel LoginViewModel { get; set; } = new LoginViewModel();
@@ -55,7 +56,7 @@
 			var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
 			if(result != null)
 			{
-				await localStorage.SetItemAsync("authToken", result.Token);
+				await AuthStateProvider.Login(result.Token); // Use AuthStateProvider to store JWT and update authentication state
 
 				Message = "Login successful!";
 				Navigation.NavigateTo("/"); // Redirect after login
