@@ -1,13 +1,19 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> eace544 (Started working on implementation of proper login with JWT and save the token using local storage.)
 ﻿@using Models.Login;
 @using Models.Jwt;
 @inject HttpClient httpClient;
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
+<<<<<<< HEAD
 =======
 ﻿@using Models.ViewModels;
 @inject HttpClient httpClient;
 >>>>>>> 59fd1c9 (Added files which weren't tracked during the last commit.)
+=======
+>>>>>>> eace544 (Started working on implementation of proper login with JWT and save the token using local storage.)
 
 <EditForm Model="@LoginViewModel" OnValidSubmit="HandleLogin">
 	<div class="container">
@@ -59,10 +65,13 @@
 	{
 		var response = await httpClient.PostAsJsonAsync("")
 
+<<<<<<< HEAD
 
 		var isSuccess = await MockApiLogin(LoginViewModel.UserName, LoginViewModel.Password);
 >>>>>>> 59fd1c9 (Added files which weren't tracked during the last commit.)
 
+=======
+>>>>>>> eace544 (Started working on implementation of proper login with JWT and save the token using local storage.)
 		if (response.IsSuccessStatusCode)
 		{
 			var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
