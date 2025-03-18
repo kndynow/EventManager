@@ -1,4 +1,5 @@
 using EventManager.Core.Services;
+using static EventManager.Api.Jwt.TokenService;
 
 namespace EventManager.Api.Endpoints.User;
 
@@ -19,29 +20,18 @@ public class Login : IEndpoint
     private static async Task<IResult> Handle(
         Request request,
         IUserService userService,
-        HttpContext context
+        ITokenService tokenService
     )
     {
-        var result = await userService.Login(request.Username, request.Password);
+        var user = await userService.Login(request.Username, request.Password);
 
-        if (result == null)
+        if (user == null)
         {
             return TypedResults.NotFound("Invalid username or password");
         }
 
-        // Set a simple auth cookie
-        context.Response.Cookies.Append(
-            "auth",
-            $"{result.Username}:{result.Role}",
-            new CookieOptions
-            {
-                Secure = true,
-                HttpOnly = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.UtcNow.AddDays(7),
-            }
-        );
-        var response = new Response(result.Username, result.Role);
-        return TypedResults.Ok(response);
+        var token = tokenService.GenerateToken(user.Username, user.Role);
+
+        return TypedResults.Ok(new {Token = token});
     }
 }

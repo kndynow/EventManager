@@ -1,8 +1,24 @@
 using EventManager.Api.Endpoints;
-using EventManager.Core;
+using EventManager.Api.Jwt;
 using EventManager.Core.Validator;
+using static EventManager.Api.Jwt.TokenService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using EventManager.Core;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Avoiding CORS-error
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorClient", policy =>
+    {
+        policy.WithOrigins("https://localhost:7274") 
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 // Configure MongoDB connection string
 builder
@@ -11,27 +27,36 @@ builder
 
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<MongoDbContext>();
-builder.Services.AddSingleton<IEventRepository, EventRepository>();
+builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
-builder.Services.AddTransient<IUserValidator, UserValidator>();
-builder.Services.AddTransient<IEventValidator, EventValidator>();
-
-//Probably change to scoped if switching to JWT
 builder.Services.AddSingleton<IUserService, UserService>();
-builder.Services.AddSingleton<IEventService, EventService>();
+builder.Services.AddSingleton<IEventService, EventService>(); 
+builder.Services.AddSingleton<IEventRepository, EventRepository>();
+builder.Services.AddSingleton<IUserValidator, UserValidator>();
+builder.Services.AddSingleton<IEventValidator, EventValidator>(); 
 
-// Cookie authentication (might switch to JWT later)
-builder
-    .Services.AddAuthentication("Cookies")
-    .AddCookie(
-        "Cookies",
-        options =>
-        {
-            options.Cookie.Name = "auth";
-            options.Cookie.HttpOnly = true;
-            options.Cookie.SameSite = SameSiteMode.Strict;
-        }
-    );
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    //In production = true
+    //options.RequireHttpsMetadata = true;
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"])),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true
+    };
+});
 
 builder.Services.AddAuthorization();
 
@@ -50,6 +75,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors("AllowBlazorClient");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

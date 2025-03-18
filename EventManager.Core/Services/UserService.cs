@@ -35,7 +35,6 @@ public class UserService : IUserService
         return new User(user.Username, user.Role);
     }
 
-    // TODO: Create validator for user registration via Validator/IValidator
     public async Task<User?> Register(string username, string password)
     {
         if (!_userValidator.IsValidUsername(username))
