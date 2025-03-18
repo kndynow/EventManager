@@ -8,6 +8,18 @@ using EventManager.Core;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Avoiding CORS-error
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorClient", policy =>
+    {
+        policy.WithOrigins("https://localhost:7274") 
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // Configure MongoDB connection string
 builder
     .Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -22,6 +34,7 @@ builder.Services.AddSingleton<IEventService, EventService>();
 builder.Services.AddSingleton<IEventRepository, EventRepository>();
 builder.Services.AddSingleton<IUserValidator, UserValidator>();
 builder.Services.AddSingleton<IEventValidator, EventValidator>(); 
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -62,6 +75,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors("AllowBlazorClient");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
