@@ -26,6 +26,7 @@ using static EventManager.Api.Jwt.TokenService;
 >>>>>>> 1aa3bc0 (Created TokenService which generates a JWT-token on succesful login in the Login-endpoint.)
 
 var builder = WebApplication.CreateBuilder(args);
+<<<<<<< HEAD
 var config = builder.Configuration;
 
 //Avoiding CORS-error
@@ -44,6 +45,23 @@ builder.Services.AddCors(options =>
 // Configure MongoDB connection string
 builder
     .Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+=======
+
+//Avoiding CORS-error
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorClient", policy =>
+    {
+        policy.WithOrigins("https://localhost:7274") 
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+// Configure MongoDB connection string
+builder
+    .Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+>>>>>>> 7f81bdb (Configured so that CORS-error doesn't appear when calling the api from blazor.)
     .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
 
 builder.Services.AddOpenApi();
@@ -95,6 +113,7 @@ builder.Services.AddSingleton<ITokenService, TokenService>();
 //Probably change to scoped if switching to JWT
 builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddSingleton<IEventService, EventService>();
+
 
 builder.Services.AddAuthentication(options =>
 {
