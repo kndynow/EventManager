@@ -4,9 +4,11 @@
 >>>>>>> eace544 (Started working on implementation of proper login with JWT and save the token using local storage.)
 ﻿@using Models.Login;
 @using Models.Jwt;
+@using Services;
 @inject HttpClient httpClient;
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 ﻿@using Models.ViewModels;
@@ -14,6 +16,9 @@
 >>>>>>> 59fd1c9 (Added files which weren't tracked during the last commit.)
 =======
 >>>>>>> eace544 (Started working on implementation of proper login with JWT and save the token using local storage.)
+=======
+@inject CustomAuthenticationStateProvider AuthStateProvider; 
+>>>>>>> 2183ccc (Added files which were supposed to be added in the last commit.)
 
 <EditForm Model="@LoginViewModel" OnValidSubmit="HandleLogin">
 	<div class="container">
@@ -47,7 +52,6 @@
 
 </EditForm>
 
-
 @code {
 	[SupplyParameterFromForm]
 	private LoginViewModel LoginViewModel { get; set; } = new LoginViewModel();
@@ -77,7 +81,7 @@
 			var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
 			if(result != null)
 			{
-				await localStorage.SetItemAsync("authToken", result.Token);
+				await AuthStateProvider.Login(result.Token); // Use AuthStateProvider to store JWT and update authentication state
 
 				Message = "Login successful!";
 				Navigation.NavigateTo("/"); // Redirect after login
