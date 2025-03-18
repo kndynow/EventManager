@@ -1,6 +1,8 @@
-﻿@using Models.ViewModels;
+﻿@using Models.Login;
 @using Models.Jwt;
 @inject HttpClient httpClient;
+@inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService localStorage;
 
 <EditForm Model="@LoginViewModel" OnValidSubmit="HandleLogin">
 	<div class="container">
@@ -48,25 +50,21 @@
 			Password = LoginViewModel.Password
 		});
 
-		if(response.IsSuccessStatusCode)
+		if (response.IsSuccessStatusCode)
 		{
 			var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
 			if(result != null)
 			{
+				await localStorage.SetItemAsync("authToken", result.Token);
 
+				Message = "Login successful!";
+				Navigation.NavigateTo("/"); // Redirect after login
 			}
 		}
-
-
-		var isSuccess = await MockApiLogin(LoginViewModel.UserName, LoginViewModel.Password);
-
-		Message = isSuccess ? "Login successful!" : "Invalid username or password.";
-	}
-
-	private async Task<bool> MockApiLogin(string? username, string? password)
-	{
-		// Super simple mock — replace with real logic later
-		return username == "admin" && password == "password123";
+		else
+		{
+			Message = "Invalid username or password.";
+		}
 	}
 
 	public void GoToSignUp()
