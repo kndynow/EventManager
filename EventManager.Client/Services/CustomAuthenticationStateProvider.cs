@@ -4,8 +4,10 @@ using System.Security.Claims;
 
 namespace EventManager.Client.Services
 {
+    //Manages the authentication
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
+        //LocalStorage is used to store and retrieve JWT:s
         private readonly ILocalStorageService _localStorage;
 
         public CustomAuthenticationStateProvider(ILocalStorageService localStorage)
@@ -13,6 +15,8 @@ namespace EventManager.Client.Services
             _localStorage = localStorage;
         }
 
+        //Retrieves JWT from localstorage.
+        //If no token exists it creates an empty ClaimsIdentity(user not logged in)
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var token = await _localStorage.GetItemAsync<string>("authToken");
@@ -23,13 +27,15 @@ namespace EventManager.Client.Services
 
             return new AuthenticationState(new ClaimsPrincipal(identity));
         }
-
+        //Saves the provided token in localstorage. 
+        //Notifies authentication system that user's authenticationstate has changed. 
         public async Task Login(string token)
         {
             await _localStorage.SetItemAsync("authToken", token);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
-
+        //Removes user token from local storage
+        //Notifies authentication system that user isn't authenticated anymore
         public async Task Logout()
         {
             await _localStorage.RemoveItemAsync("authToken");
