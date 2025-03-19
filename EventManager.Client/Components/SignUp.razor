@@ -8,15 +8,19 @@
 		<div>
 			<label for="Username">Enter username: </label>
 			<InputText id="Username" @bind-Value="@SignUpModel.Username" />
+			<ValidationMessage For="@(() => SignUpModel.Username)"/>
 		</div>
 
 		<div>
 			<label for="Password">Enter password: </label>
-			<InputText id="Password" @bind-Value="@SignUpModel.Password"/>
+			<InputText id="Password" type=password @bind-Value="@SignUpModel.Password"/>
+			<ValidationMessage For="@(() => SignUpModel.Password)" />
+
 		</div>
 		<div>
 			<label for="RepeatPassword">Repeat your password</label>
-			<InputText id="RepeatPassword" @bind-Value="@SignUpModel.RepeatPassword"/>
+			<InputText id="RepeatPassword" type=password @bind-Value="@SignUpModel.RepeatPassword"/>
+			<ValidationMessage For="@(() => SignUpModel.RepeatPassword)" />
 		</div>
 
 		<button type="submit">Log in</button>
