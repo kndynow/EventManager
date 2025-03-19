@@ -1,3 +1,4 @@
+using System.Text;
 using EventManager.Api.Endpoints;
 using EventManager.Api.Jwt;
 using EventManager.Core.Validator;

@@ -58,14 +58,13 @@
 			{
 				await AuthStateProvider.Login(result.Token); // Use AuthStateProvider to store JWT and update authentication state
 
-				Message = "Login successful!";
-				Navigation.NavigateTo("/"); // Redirect after login
-			}
-		}
-		else
-		{
-			Message = "Invalid username or password.";
-		}
+		Message = isSuccess ? "Login successful!" : "Invalid username or password.";
+	}
+
+	private async Task<bool> MockApiLogin(string? username, string? password)
+	{
+		// Super simple mock — replace with real logic later
+		return username == "admin" && password == "password123";
 	}
 
 	public void GoToSignUp()
