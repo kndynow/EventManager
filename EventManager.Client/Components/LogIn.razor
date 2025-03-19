@@ -1,8 +1,10 @@
 ﻿@using Models.Login;
 @using Models.Jwt;
+@using Services;
 @inject HttpClient httpClient;
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
+@inject CustomAuthenticationStateProvider AuthStateProvider; 
 
 <EditForm Model="@LoginViewModel" OnValidSubmit="HandleLogin">
 	<div class="container">
@@ -36,7 +38,6 @@
 
 </EditForm>
 
-
 @code {
 	[SupplyParameterFromForm]
 	private LoginViewModel LoginViewModel { get; set; } = new LoginViewModel();
@@ -55,16 +56,15 @@
 			var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
 			if(result != null)
 			{
-				await localStorage.SetItemAsync("authToken", result.Token);
+				await AuthStateProvider.Login(result.Token); // Use AuthStateProvider to store JWT and update authentication state
 
-				Message = "Login successful!";
-				Navigation.NavigateTo("/"); // Redirect after login
-			}
-		}
-		else
-		{
-			Message = "Invalid username or password.";
-		}
+		Message = isSuccess ? "Login successful!" : "Invalid username or password.";
+	}
+
+	private async Task<bool> MockApiLogin(string? username, string? password)
+	{
+		// Super simple mock — replace with real logic later
+		return username == "admin" && password == "password123";
 	}
 
 	public void GoToSignUp()
