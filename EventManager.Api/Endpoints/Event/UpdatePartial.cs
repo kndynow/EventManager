@@ -53,7 +53,7 @@ public class UpdateEventPartial : IEndpoint
 
             return Results.Ok(MapToResponse(updatedEvent));
         }
-        catch (KeyNotFoundException ex)
+        catch (KeyNotFoundException)
         {
             return Results.NotFound($"Event with id {request.Id} was not found.");
         }
