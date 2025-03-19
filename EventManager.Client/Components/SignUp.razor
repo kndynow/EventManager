@@ -1,29 +1,29 @@
 ﻿@using Models.SignUp;
 
 <EditForm Model="@SignUpModel" OnValidSubmit="HandleSignUp">
-	<div>
+	<div class="container">
 		<DataAnnotationsValidator />
 
 		<h1>Authenticate</h1>
-		<div>
+		<div class="form-group">
 			<label for="Username">Enter username: </label>
-			<InputText id="Username" @bind-Value="@SignUpModel.Username" />
+			<InputText id="Username" class="input" @bind-Value="@SignUpModel.Username" />
 			<ValidationMessage For="@(() => SignUpModel.Username)"/>
 		</div>
 
-		<div>
+		<div class="form-group">
 			<label for="Password">Enter password: </label>
-			<InputText id="Password" type=password @bind-Value="@SignUpModel.Password"/>
+			<InputText id="Password" class="input" type=password @bind-Value="@SignUpModel.Password"/>
 			<ValidationMessage For="@(() => SignUpModel.Password)" />
 
 		</div>
-		<div>
+		<div class="form-group">
 			<label for="RepeatPassword">Repeat your password</label>
-			<InputText id="RepeatPassword" type=password @bind-Value="@SignUpModel.RepeatPassword"/>
+			<InputText id="RepeatPassword" class="input" type=password @bind-Value="@SignUpModel.RepeatPassword"/>
 			<ValidationMessage For="@(() => SignUpModel.RepeatPassword)" />
 		</div>
 
-		<button type="submit">Log in</button>
+		<button type="submit" class="btn">Sign up</button>
 	</div>
 </EditForm>
 

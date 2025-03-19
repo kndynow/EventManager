@@ -16,8 +16,11 @@ namespace EventManager.Client.Models.SignUp
         [MaxLength(24, ErrorMessage = "Password cannot be longer than 24 characters")]
         public string? Password { get; set; }
 
-        //Repeat password
+
+
         [Required(AllowEmptyStrings = false, ErrorMessage = "Repeat password for verification")]
+        [MinLength(6, ErrorMessage = "Repeat password for verification")]
+        [MaxLength(24, ErrorMessage = "Repeat password for verification")]
         public string? RepeatPassword { get; set; }
     }
 }
