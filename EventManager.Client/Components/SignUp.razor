@@ -1,0 +1,35 @@
+﻿@using Models.SignUp;
+
+<EditForm Model="@SignUpModel" OnValidSubmit="HandleSignUp">
+	<div>
+		<DataAnnotationsValidator />
+
+		<h1>Authenticate</h1>
+		<div>
+			<label for="Username">Enter username: </label>
+			<InputText id="Username" @bind-Value="@SignUpModel.Username" />
+		</div>
+
+		<div>
+			<label for="Password">Enter password: </label>
+			<InputText id="Password" @bind-Value="@SignUpModel.Password"/>
+		</div>
+		<div>
+			<label for="RepeatPassword">Repeat your password</label>
+			<InputText id="RepeatPassword" @bind-Value="@SignUpModel.RepeatPassword"/>
+		</div>
+
+		<button type="submit">Log in</button>
+	</div>
+</EditForm>
+
+
+@code {
+	[SupplyParameterFromForm]
+	private SignUpModel SignUpModel { get; set; } = new SignUpModel();
+
+	private void HandleSignUp()
+	{
+		Console.WriteLine($"Username: {SignUpModel.Username}");
+	}
+}
