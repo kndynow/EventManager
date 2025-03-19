@@ -1,0 +1,12 @@
+﻿@inject CustomAuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
+
+<button @onclick="Logout">Logout</button>
+
+@code {
+    private async Task Logout()
+    {
+        await AuthStateProvider.Logout();
+        Navigation.NavigateTo("/login");
+    }
+}

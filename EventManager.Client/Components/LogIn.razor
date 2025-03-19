@@ -1,8 +1,10 @@
 ﻿@using Models.Login;
 @using Models.Jwt;
+@using Services;
 @inject HttpClient httpClient;
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
+@inject CustomAuthenticationStateProvider AuthStateProvider; 
 
 <EditForm Model="@LoginViewModel" OnValidSubmit="HandleLogin">
 	<div class="container">
@@ -36,36 +38,37 @@
 
 </EditForm>
 
-
 @code {
 	[SupplyParameterFromForm]
 	private LoginViewModel LoginViewModel { get; set; } = new LoginViewModel();
 	private string? Message;
 
-	private async Task HandleLogin()
-	{
-		var response = await httpClient.PostAsJsonAsync("https://localhost:7206/auth/login", new
-		{
-			Username = LoginViewModel.UserName,
-			Password = LoginViewModel.Password
-		});
+private async Task HandleLogin()
+{
+    var response = await httpClient.PostAsJsonAsync("https://localhost:7206/auth/login", new
+    {
+        Username = LoginViewModel.UserName,
+        Password = LoginViewModel.Password
+    });
 
-		if (response.IsSuccessStatusCode)
-		{
-			var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-			if(result != null)
-			{
-				await localStorage.SetItemAsync("authToken", result.Token);
-
-				Message = "Login successful!";
-				Navigation.NavigateTo("/"); // Redirect after login
-			}
-		}
-		else
-		{
-			Message = "Invalid username or password.";
-		}
-	}
+    if (response.IsSuccessStatusCode)
+    {
+        var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+        if (result != null)
+        {
+            await AuthStateProvider.Login(result.Token); // Use AuthStateProvider to store JWT and update authentication state
+            Message = "Login successful!";
+        }
+        else
+        {
+            Message = "Invalid username or password.";
+        }
+    }
+    else
+    {
+        Message = "Login failed.";
+    }
+}
 
 	public void GoToSignUp()
 	{
