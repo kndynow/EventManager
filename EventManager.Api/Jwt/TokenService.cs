@@ -23,6 +23,8 @@ namespace EventManager.Api.Jwt
         public string GenerateToken(string username, string role)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
+
+            // Retrieve the secret key from configuration and convert it to bytes
             var key = Encoding.UTF8.GetBytes(_config["JwtSettings:Key"]!);
 
             var tokenDescriptor = new SecurityTokenDescriptor
