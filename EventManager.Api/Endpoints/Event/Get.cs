@@ -20,16 +20,18 @@ public class GetEvent : IEndpoint
     );
 
     //Logic
-    private static async Task<IResult> Handle([AsParameters] Request request, IEventService eventService)
+    private static async Task<IResult> Handle(
+        [AsParameters] Request request,
+        IEventService eventService
+    )
     {
         var ev = await eventService.GetEventByIdAsync(request.Id);
 
-        if (ev == null)
+        if (ev is null)
         {
             return Results.NotFound($"Event with id {request.Id} not found.");
         }
 
-        // Map ev to response dto
         var response = new Response(
             Id: ev.Id,
             Name: ev.Name,

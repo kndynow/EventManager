@@ -1,9 +1,4 @@
 ﻿using EventManager.Core.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EventManager.Core.Models;
 using EventManager.Core.Validator;
 
@@ -11,28 +6,29 @@ namespace EventManager.Core.Services
 {
     public interface IEventService
     {
-        Task<IEnumerable<Event>> GetAllEventsAsync();
         Task<string> CreateEventAsync(Event newEvent);
+        Task<IEnumerable<Event>> GetAllEventsAsync();
         Task<Event> GetEventByIdAsync(string id);
+        Task<Event> UpdateEventAsync(string id, Event updatedEvent);
+        Task<Event> UpdateEventPartialAsync(string id, Event updatedEvent);
+        Task<Event> DeleteEventAsync(string id);
     }
 
     //Handles the business logic
     public class EventService : IEventService
     {
+        //Dependency injection
         private readonly IEventRepository _eventRepository;
         private readonly IEventValidator _eventValidator;
 
+        //Constructor
         public EventService(IEventRepository eventRepository, IEventValidator eventValidator)
         {
             _eventRepository = eventRepository;
             _eventValidator = eventValidator;
         }
 
-        public async Task<IEnumerable<Event>> GetAllEventsAsync()
-        {
-            return await _eventRepository.GetAllAsync();
-        }
-
+        //Creates a new event
         public async Task<string> CreateEventAsync(Event newEvent)
         {
             if (!_eventValidator.CheckIfValidEvent(newEvent))
@@ -44,16 +40,55 @@ namespace EventManager.Core.Services
             return newEvent.Id;
         }
 
+        //Fetches all events
+        public async Task<IEnumerable<Event>> GetAllEventsAsync()
+        {
+            return await _eventRepository.GetAllAsync();
+        }
+
+        //Fetches an event by id
         public async Task<Event> GetEventByIdAsync(string id)
         {
             var ev = await _eventRepository.GetByIdAsync(id);
-
+            //If event is not found, throw an exception
             if (ev == null)
             {
                 throw new KeyNotFoundException("Event not found.");
             }
 
             return ev;
+        }
+
+        //Updates an event
+        public async Task<Event> UpdateEventAsync(string id, Event updatedEvent)
+        {
+            var ev = await _eventRepository.GetByIdAsync(id);
+            if (ev == null)
+            {
+                throw new KeyNotFoundException("Event not found.");
+            }
+
+            await _eventRepository.UpdateAsync(updatedEvent);
+            return updatedEvent;
+        }
+
+        //Updates an event partially
+        public async Task<Event> UpdateEventPartialAsync(string id, Event updatedEvent)
+        {
+            var ev = await _eventRepository.GetByIdAsync(id);
+            if (ev == null)
+            {
+                throw new KeyNotFoundException("Event not found.");
+            }
+
+            await _eventRepository.UpdatePartialAsync(updatedEvent);
+            return updatedEvent;
+        }
+
+        //Deletes an event
+        public Task<Event> DeleteEventAsync(string id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

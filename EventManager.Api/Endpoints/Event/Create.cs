@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
-
-namespace EventManager.Api.Endpoints;
+﻿namespace EventManager.Api.Endpoints;
 
 public class CreateEvent : IEndpoint
 {
@@ -34,7 +31,7 @@ public class CreateEvent : IEndpoint
             Type = request.Type,
             StartTime = request.Start,
             EndTime = request.End,
-            MaxAttendees = request.MaxAttendees
+            MaxAttendees = request.MaxAttendees,
         };
 
         var eventId = await eventService.CreateEventAsync(newEvent);
