@@ -34,7 +34,7 @@
 		<button type="submit" class="btn">Sign up</button>
 
 		<div class="login-formgroup">
-			<p>Already have an account? <NavLink href="/login">Log in here</NavLink></p>
+			<p>Already have an account? <NavLink href="/">Log in here</NavLink></p>
 		</div>
 	</div>
 </EditForm>
@@ -67,7 +67,7 @@
 				StateHasChanged(); // Manually trigger a UI update
 				await Task.Delay(1000);
 			}
-			Navigation.NavigateTo("/login");
+			Navigation.NavigateTo("/");
 
 		}
 		else
