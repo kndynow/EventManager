@@ -5,7 +5,7 @@
 	<div class="container">
 		<DataAnnotationsValidator />
 
-		<h1>Authenticate</h1>
+		<h1>Sign up</h1>
 		<div class="form-group">
 			<label for="Username">Enter username: </label>
 			<InputText id="Username" class="input" @bind-Value="@SignUpModel.Username" />
@@ -26,7 +26,7 @@
 
 		@if (!string.IsNullOrEmpty(Message))
 		{
-			<p>@Message</p>
+			<div class="@MessageClass">@Message</div>
 		}
 
 		<button type="submit" class="btn">Sign up</button>
@@ -38,9 +38,11 @@
 	[SupplyParameterFromForm]
 	private SignUpModel SignUpModel { get; set; } = new SignUpModel();
 	private string? Message;
+	private string MessageClass;
 
 	private async Task HandleSignUp()
 	{
+		MessageClass = "hidden";
 		var response = await httpClient.PostAsJsonAsync("https://localhost:7206/auth/register", new
 		{
 			Username = SignUpModel.Username,
@@ -50,10 +52,12 @@
 		if (response.IsSuccessStatusCode)
 		{
 			Message = "Sign up successful!";
+			MessageClass = "alert alert-success";
 		}
 		else
 		{
-			Message = "Username already in use, please enter another username";
+			Message = "Something went wrong, please try again.";
+			MessageClass = "alert alert-error";
 		}
 	}
 }

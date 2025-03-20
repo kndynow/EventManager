@@ -33,6 +33,7 @@
 }
 
 .btn {
+    font-weight:bold;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,3 +53,27 @@
         transform: scale(1.05);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
+
+.hidden {
+    display:none;
+}
+.alert {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    background-color:white;
+    padding:4px;
+}
+
+.alert-success {
+    border:1px solid green;
+    color: green;
+}
+.alert-error {
+    border: 1px solid red;
+    color: red;
+}
