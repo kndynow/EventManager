@@ -3,7 +3,6 @@
     margin: 0;
     padding: 0;
     font-family: Arial;
-
 }
 
 .container {
@@ -38,8 +37,8 @@ label {
     color: #495057;
 }
 
-  /***********/
- /* BUTTONS */
+/***********/
+/* BUTTONS */
 /***********/
 
 .btn {
@@ -51,15 +50,16 @@ label {
     background-color: #90EE90;
 }
 
-.btn:hover {
-    cursor: pointer;
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
+    .btn:hover {
+        cursor: pointer;
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
 
 .sign-up-group {
     margin-top: auto;
 }
 
-
-
+.unsuccessful-login {
+    color: red;
+}
