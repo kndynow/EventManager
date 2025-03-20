@@ -6,7 +6,7 @@ namespace EventManager.Core.Services
 {
     public interface IEventService
     {
-        Task<string> CreateEventAsync(Event newEvent);
+        Task<Event> CreateEventAsync(Event newEvent);
         Task<IEnumerable<Event>> GetAllEventsAsync();
         Task<Event> GetEventByIdAsync(string id);
         Task<Event> UpdateEventAsync(string id, Event updatedEvent);
@@ -29,7 +29,7 @@ namespace EventManager.Core.Services
         }
 
         //Creates a new event
-        public async Task<string> CreateEventAsync(Event newEvent)
+        public async Task<Event> CreateEventAsync(Event newEvent)
         {
             if (!_eventValidator.CheckIfValidEvent(newEvent))
             {
@@ -37,7 +37,7 @@ namespace EventManager.Core.Services
             }
 
             await _eventRepository.CreateAsync(newEvent);
-            return newEvent.Id;
+            return newEvent;
         }
 
         //Fetches all events
@@ -88,7 +88,14 @@ namespace EventManager.Core.Services
         //Deletes an event
         public Task<Event> DeleteEventAsync(string id)
         {
-            throw new NotImplementedException();
+            var ev = GetEventByIdAsync(id);
+            if (ev is null)
+            {
+                throw new KeyNotFoundException("Event not found.");
+            }
+
+            _eventRepository.DeleteAsync(id);
+            return ev;
         }
     }
 }

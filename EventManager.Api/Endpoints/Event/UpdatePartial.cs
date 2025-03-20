@@ -1,4 +1,6 @@
-using System;
+using EventManager.Api.Models;
+using Mapster;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EventManager.Api.Endpoints;
 
@@ -9,41 +11,13 @@ public class UpdateEventPartial : IEndpoint
         app.MapPatch("/events/{id}", Handle).WithSummary("Update event");
     }
 
-    public record Request(
-        string Id,
-        string Name,
-        string Description,
-        EventType Type,
-        DateTime Start,
-        DateTime End,
-        int MaxAttendees
-    );
-
-    public record Response(
-        string Id,
-        string Name,
-        string Description,
-        EventType Type,
-        DateTime Start,
-        DateTime End,
-        int MaxAttendees
-    );
-
     // Handle
     private static async Task<IResult> Handle(
-        [AsParameters] Request request,
+        [FromBody] PatchEventDto request,
         IEventService eventService
     )
     {
-        var eventToUpdate = new Event()
-        {
-            Name = request.Name,
-            Description = request.Description,
-            Type = request.Type,
-            StartTime = request.Start,
-            EndTime = request.End,
-            MaxAttendees = request.MaxAttendees,
-        };
+        var eventToUpdate = request.Adapt<Event>();
         try
         {
             var updatedEvent = await eventService.UpdateEventPartialAsync(
@@ -51,22 +25,11 @@ public class UpdateEventPartial : IEndpoint
                 eventToUpdate
             );
 
-            return Results.Ok(MapToResponse(updatedEvent));
+            return Results.Ok(updatedEvent.Adapt<EventResponseDto>());
         }
         catch (KeyNotFoundException)
         {
             return Results.NotFound($"Event with id {request.Id} was not found.");
         }
     }
-
-    private static Response MapToResponse(Event ev) =>
-        new(
-            Id: ev.Id,
-            Name: ev.Name,
-            Description: ev.Description,
-            Type: ev.Type,
-            Start: ev.StartTime,
-            End: ev.EndTime,
-            MaxAttendees: ev.MaxAttendees
-        );
 }

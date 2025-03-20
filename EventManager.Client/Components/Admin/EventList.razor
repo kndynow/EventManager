@@ -25,8 +25,13 @@
     </tbody>
 </table>
 @code {
+    // EventList takes a list of event objects as parameter to be displayed
     [Parameter]
     public List<Event> Events { get; set; } = new List<Event>();
+
+    // Callback that is called when the user clicks the Edit button for an event.
+    // This callback takes the event ID as a parameter and can be used to handle
+    // editing of the event in the parent component.
     [Parameter]
     public EventCallback<string> OnEdit { get; set; }
 

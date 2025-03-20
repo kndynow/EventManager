@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using System.Text.Json.Serialization;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace EventManager.Core.Models;
@@ -16,6 +17,7 @@ public class Event
     public int MaxAttendees { get; set; }
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum EventType
 {
     Concert = 0,
