@@ -3,11 +3,10 @@
     margin: 0;
     padding: 0;
     font-family: Arial;
-
 }
 
 .container {
-    max-width: 400px;
+    max-width: 450px;
     min-height: 500px;
     margin: 100px auto;
     padding: 20px;
@@ -38,8 +37,8 @@ label {
     color: #495057;
 }
 
-  /***********/
- /* BUTTONS */
+/***********/
+/* BUTTONS */
 /***********/
 
 .btn {
@@ -47,30 +46,20 @@ label {
     transition: all 0.3s ease;
     border-radius: 15px;
     border: none;
-}
-
-.btn:hover {
-    cursor: pointer;
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.login-btn {
-    background-color:lightblue;
-}
-
-.signup-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 150px;
-    margin: 0 auto;
+    font-weight: bold;
     background-color: #90EE90;
 }
+
+    .btn:hover {
+        cursor: pointer;
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
 
 .sign-up-group {
     margin-top: auto;
 }
 
-
-
+.unsuccessful-login {
+    color: red;
+}

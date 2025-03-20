@@ -1,0 +1,79 @@
+﻿@using Models.SignUp;
+@inject NavigationManager Navigation;
+@inject HttpClient httpClient;
+
+<EditForm Model="@SignUpModel" OnValidSubmit="HandleSignUp">
+	<div class="container">
+		<DataAnnotationsValidator />
+
+		<h1>Sign up</h1>
+		<div class="form-group">
+			<label for="Username">Enter username: </label>
+			<InputText id="Username" class="input" @bind-Value="@SignUpModel.Username" />
+			<ValidationMessage For="@(() => SignUpModel.Username)"/>
+		</div>
+
+		<div class="form-group">
+			<label for="Password">Enter password: </label>
+			<InputText id="Password" class="input" type=password @bind-Value="@SignUpModel.Password"/>
+			<ValidationMessage For="@(() => SignUpModel.Password)" />
+
+		</div>
+
+		<div class="form-group">
+			<label for="RepeatPassword">Repeat your password</label>
+			<InputText id="RepeatPassword" class="input" type=password @bind-Value="@SignUpModel.RepeatPassword"/>
+			<ValidationMessage For="@(() => SignUpModel.RepeatPassword)" />
+		</div>
+
+		@if (!string.IsNullOrEmpty(Message))
+		{
+			<div class="@MessageClass">@Message</div>
+		}
+
+		<button type="submit" class="btn">Sign up</button>
+
+		<div class="login-formgroup">
+			<p>Already have an account? <NavLink href="/login">Log in here</NavLink></p>
+		</div>
+	</div>
+</EditForm>
+
+@code {
+	[SupplyParameterFromForm]
+	private SignUpModel SignUpModel { get; set; } = new SignUpModel();
+	private string? Message;
+	private string MessageClass = "hidden";
+	private int countdown = 5;
+
+	private async Task HandleSignUp()
+	{
+		MessageClass = "hidden";
+		var response = await httpClient.PostAsJsonAsync("https://localhost:7206/auth/register", new
+		{
+			Username = SignUpModel.Username,
+			Password = SignUpModel.Password
+		});
+
+		if (response.IsSuccessStatusCode)
+		{
+			Message = $"Sign up successful! Redirecting to login-page in {countdown} seconds...";
+			MessageClass = "alert alert-success";
+
+			for (int i = 5; i > 0; i--)
+			{
+				countdown = i;
+				Message = $"Sign up successful! Redirecting to login-page {countdown} seconds...";
+				StateHasChanged(); // Manually trigger a UI update
+				await Task.Delay(1000);
+			}
+			Navigation.NavigateTo("/login");
+
+		}
+		else
+		{
+			Message = "Something went wrong, please try again.";
+			MessageClass = "alert alert-error";
+		}
+	}
+}
