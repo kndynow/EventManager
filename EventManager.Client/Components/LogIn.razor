@@ -23,7 +23,7 @@
 			<ValidationMessage For="@(() => LoginViewModel.Password)" />
 		</div>
 
-		<button type="submit" class="btn login-btn">Log In</button>
+		<button type="submit" class="btn">Log In</button>
 
 		@if (!string.IsNullOrEmpty(Message))
 		{
@@ -31,8 +31,7 @@
 		}
 
 		<div class="form-group sign-up-group">
-			<p>Don't have an account?</p>
-			<button type="button" class="btn signup-btn" @onclick="GoToSignUp">Sign up</button>
+			<p>Don't have an account? <NavLink href="/signup">Sign up here</NavLink></p>
 		</div>
 	</div>
 
@@ -69,9 +68,4 @@ private async Task HandleLogin()
         Message = "Login failed.";
     }
 }
-
-	public void GoToSignUp()
-	{
-		//Navigate to sign-up page
-	}
 }

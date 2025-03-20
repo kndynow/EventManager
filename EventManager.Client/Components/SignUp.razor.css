@@ -19,6 +19,11 @@
     gap: 15px;
 }
 
+label {
+    font-weight: bold;
+    color: #495057;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
@@ -33,18 +38,14 @@
 }
 
 .btn {
-    font-weight:bold;
+    font-weight: bold;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 150px;
-    height: 4rem;
+    height: 3rem;
     transition: all 0.3s ease;
     border-radius: 15px;
     border: none;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: auto;
     background-color: #90EE90;
 }
 
@@ -76,4 +77,8 @@
 .alert-error {
     border: 1px solid red;
     color: red;
+}
+
+.login-formgroup{
+    margin-top:auto;
 }
