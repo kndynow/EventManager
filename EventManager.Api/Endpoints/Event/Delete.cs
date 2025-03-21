@@ -1,17 +1,14 @@
-﻿using EventManager.Api.Models;
-using Mapster;
-
 namespace EventManager.Api.Endpoints;
 
-public class GetEvent : IEndpoint
+public class DeleteEvent : IEndpoint
 {
-    // Mapping
-    public static void MapEndpoint(IEndpointRouteBuilder app) =>
-        app.MapGet("/events/{id}", Handle).WithSummary("Get event");
+    public static void MapEndpoint(IEndpointRouteBuilder app)
+    {
+        app.MapDelete("/events/{id}", Handle).WithSummary("Delete event");
+    }
 
     public record Request(string Id);
 
-    //Logic
     private static async Task<IResult> Handle(
         [AsParameters] Request request,
         IEventService eventService
@@ -19,8 +16,8 @@ public class GetEvent : IEndpoint
     {
         try
         {
-            var ev = await eventService.GetEventByIdAsync(request.Id);
-            return Results.Ok(ev);
+            await eventService.DeleteEventAsync(request.Id);
+            return Results.Ok();
         }
         catch (KeyNotFoundException)
         {
