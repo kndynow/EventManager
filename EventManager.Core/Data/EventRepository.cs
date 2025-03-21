@@ -1,4 +1,4 @@
-﻿using EventManager.Core.Models;
+using EventManager.Core.Models;
 using MongoDB.Driver;
 
 namespace EventManager.Core.Data

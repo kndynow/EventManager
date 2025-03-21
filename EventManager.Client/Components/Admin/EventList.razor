@@ -11,16 +11,16 @@
     <tbody>
         @foreach (var evnt in Events)
         {
-            <tr>
-                <td>@evnt.Name</td>
-                <td>@evnt.Description</td>
-                <td>@evnt.StartTime</td>
-                <td>@evnt.EndTime</td>
-                <td>@evnt.MaxAttendees</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="(() => OnEdit.InvokeAsync(evnt.Id))">Edit</button>
-                </td>
-            </tr>
+                <tr>
+                    <td>@evnt.Name</td>
+                    <td>@evnt.Description</td>
+                    <td>@evnt.StartTime</td>
+                    <td>@evnt.EndTime</td>
+                    <td>@evnt.MaxAttendees</td>
+                    <td>
+                        <button class="btn btn-primary" @onclick="(() => OnEdit.InvokeAsync(evnt.Id))">Edit</button>
+                    </td>
+                </tr>
         }
     </tbody>
 </table>

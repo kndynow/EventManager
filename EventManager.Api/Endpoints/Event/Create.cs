@@ -1,4 +1,4 @@
-﻿using EventManager.Api.Models;
+using EventManager.Api.Models;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 

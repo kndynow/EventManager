@@ -1,4 +1,4 @@
-﻿using EventManager.Api.Models;
+using EventManager.Api.Models;
 using Mapster;
 using MongoDB.Bson;
 
@@ -7,6 +7,7 @@ namespace EventManager.Api.Endpoints;
 public class GetAllEvents : IEndpoint
 {
     // Mapping
+
     public static void MapEndpoint(IEndpointRouteBuilder app) =>
         app.MapGet("/events", Handle).WithSummary("Get all events");
 
