@@ -1,27 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>06a01e5d-a469-459c-b3fd-04a945eff42c</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>06a01e5d-a469-459c-b3fd-04a945eff42c</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="Properties/launchSettings.Development.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Properties/launchSettings.Development.json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Mapster" Version="7.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
-    <PackageReference Include="MongoDB.Driver" Version="3.2.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.3.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Mapster" Version="7.4.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
+		<PackageReference Include="MongoDB.Driver" Version="3.2.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.0.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\EventManager.Core\EventManager.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\EventManager.Core\EventManager.Core.csproj" />
+	</ItemGroup>
 
 </Project>
