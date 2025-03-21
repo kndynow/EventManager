@@ -14,16 +14,19 @@ public class UpdateEvent : IEndpoint
 
     //Logics and handling
     private static async Task<IResult> Handle(
-        [FromBody] UpdateEventDto request,
+        // The request body containing the updated event data
+        [FromBody]
+            UpdateEventDto request,
         IEventService eventService
     )
     {
-        // Create a new event object with the updated values
+        // Adapt/Maps the request to the Event model
         var eventToUpdate = request.Adapt<Event>();
         try
         {
+            // Update the event using the event service
             var updatedEvent = await eventService.UpdateEventAsync(request.Id, eventToUpdate);
-
+            // Return the updated event as a response
             return Results.Ok(updatedEvent.Adapt<EventResponseDto>());
         }
         catch (KeyNotFoundException)

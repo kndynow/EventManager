@@ -1,5 +1,6 @@
 ﻿using EventManager.Api.Models;
 using Mapster;
+using MongoDB.Bson;
 
 namespace EventManager.Api.Endpoints;
 
@@ -13,8 +14,12 @@ public class GetAllEvents : IEndpoint
     {
         try
         {
-            var ev = await eventService.GetAllEventsAsync();
-            return Results.Ok(ev);
+            // Fetch all events
+            var eventList = await eventService.GetAllEventsAsync();
+            // Map the events to the Event model
+            eventList.Adapt<List<EventResponseDto>>();
+            // Return the events as a response
+            return Results.Ok(eventList);
         }
         catch (KeyNotFoundException)
         {

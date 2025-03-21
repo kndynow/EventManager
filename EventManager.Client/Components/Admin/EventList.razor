@@ -14,8 +14,8 @@
             <tr>
                 <td>@evnt.Name</td>
                 <td>@evnt.Description</td>
-                <td>@evnt.Start</td>
-                <td>@evnt.End</td>
+                <td>@evnt.StartTime</td>
+                <td>@evnt.EndTime</td>
                 <td>@evnt.MaxAttendees</td>
                 <td>
                     <button class="btn btn-primary" @onclick="(() => OnEdit.InvokeAsync(evnt.Id))">Edit</button>
@@ -27,7 +27,7 @@
 @code {
     // EventList takes a list of event objects as parameter to be displayed
     [Parameter]
-    public List<Event> Events { get; set; } = new List<Event>();
+    public List<Event> Events { get; set; } = [];
 
     // Callback that is called when the user clicks the Edit button for an event.
     // This callback takes the event ID as a parameter and can be used to handle
