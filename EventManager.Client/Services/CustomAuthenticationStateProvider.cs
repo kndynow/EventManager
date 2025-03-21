@@ -25,12 +25,19 @@ namespace EventManager.Client.Services
                 ? new ClaimsIdentity() // Not authenticated
                 : new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"); // Authenticated
 
+            var roleClaim = identity.FindFirst("role");
+            if (roleClaim != null)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.Role, roleClaim.Value)); // Explicitly setting it as a role
+            }
+
             return new AuthenticationState(new ClaimsPrincipal(identity));
         }
         //Saves the provided token in localstorage. 
         //Notifies authentication system that user's authenticationstate has changed. 
         public async Task Login(string token)
         {
+            await _localStorage.RemoveItemAsync("authToken");
             await _localStorage.SetItemAsync("authToken", token);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
