@@ -1,4 +1,7 @@
-﻿namespace EventManager.Api.Endpoints;
+﻿using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
+
+namespace EventManager.Api.Endpoints;
 
 public class CreateEvent : IEndpoint
 {
@@ -18,25 +21,24 @@ public class CreateEvent : IEndpoint
         int MaxAttendees
     );
 
-    public record Response(int id);
+    public record Response(string id);
 
     //Logic
-    private static Ok<Response> Handle(Request request, IDatabase db)
+    private static async Task<Ok<Response>> Handle(Request request, IEventService eventService)
     {
         // Todo, use a better constructor that enforces setting all necessary properties
-        var ev = new Event();
+        var newEvent = new Event
+        {
+            Name = request.Name,
+            Description = request.Description,
+            Type = request.Type,
+            StartTime = request.Start,
+            EndTime = request.End,
+            MaxAttendees = request.MaxAttendees
+        };
 
-        // Map request to an event-object
-        ev.Name = request.Name;
-        ev.Description = request.Description;
-        ev.Type = request.Type;
-        ev.StartTime = request.Start;
-        ev.EndTime = request.End;
-        ev.MaxAttendees = request.MaxAttendees;
+        var eventId = await eventService.CreateEventAsync(newEvent);
 
-        // Todo: does this set id on ev-object?
-        db.Events.Add(ev);
-
-        return TypedResults.Ok(new Response(ev.Id));
+        return TypedResults.Ok(new Response(eventId));
     }
 }

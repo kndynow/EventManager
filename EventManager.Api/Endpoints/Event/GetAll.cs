@@ -1,14 +1,18 @@
-﻿namespace EventManager.Api.Endpoints;
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace EventManager.Api.Endpoints;
 
 public class GetAllEvents : IEndpoint
 {
     // Mapping
+
     public static void MapEndpoint(IEndpointRouteBuilder app) =>
         app.MapGet("/events", Handle).WithSummary("Get all events");
+        
 
     // Request and Response types
     public record Response(
-        int Id,
+        string Id,
         string Name,
         string Description,
         EventType Type,
@@ -18,10 +22,11 @@ public class GetAllEvents : IEndpoint
     );
 
     //Logic
-    private static List<Response> Handle(IDatabase db)
+    private static async Task<IEnumerable<Response>> Handle(IEventService eventService)
     {
-        return db
-            .Events.Select(item => new Response(
+        var events = await eventService.GetAllEventsAsync();
+
+        return events.Select(item => new Response(
                 Id: item.Id,
                 Name: item.Name,
                 Description: item.Description,

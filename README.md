@@ -18,35 +18,22 @@ Event Manager is a web application designed to simplify event management and tic
 
 ## Getting Started
 
-[Instructions for setting up the project locally]
+**To configure your connection string:**
+In the EventManager.Api project:
 
-## Technologies Used
-
-- Browse and search for public events
-- Purchase tickets for desired events
-- Manage and track purchased tickets
-
-- **For Administrators:**
-  - Publish, update, and remove events
-  - Manage registered users
-  - Monitor ticket sales and event attendance
-
-## Getting Started
-
-1. Clone project
-2. In your terminal, navigate to EventManager.Api
-3. Run the following commands:
-
-    ```bash
-    dotnet user-secrets init
-    dotnet user-secrets set "JwtSettings:SecretKey" "din-hemliga-nyckel-här-minst-32-tecken"
-    ```
-
-5. Test if the changes worked by first start the API-project
-6. Then start the UI-project
+1. Create a new file named 'appsettings.Development.json' if it doesn't exist.
+2. Add your MongoDB connection string to this file using the following format:
+   {
+     "MongoDbSettings": {
+       "ConnectionString": "your_mongodb_connection_string_here",
+       "DatabaseName": "EventManager"
+     }
+   }
+3. Replace 'your_mongodb_connection_string_here' with your actual MongoDB connection string.
+4. Ensure this file is not tracked by Git to keep your connection string private.
 
 ## Technologies Used
 
 - ASP.NET Core 9.0
 - Blazor WebAssembly
-- Entity Framework Core
+- MongoDB

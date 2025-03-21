@@ -1,8 +1,13 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace EventManager.Core.Models;
 
 public class User
 {
-    public Guid Id { get; init; } = Guid.NewGuid();
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
     public string Username { get; set; }
     public string PasswordHash { get; set; }
     public string Role { get; set; } = UserRoles.User; // Default role
