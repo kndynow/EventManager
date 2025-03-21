@@ -32,7 +32,7 @@ public class UserService : IUserService
             return null; //Invalid username or password
         }
 
-        return new User(user.Username, user.Role);
+        return user;
     }
 
     public async Task<User?> Register(string username, string password)

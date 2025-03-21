@@ -13,8 +13,6 @@ public class Login : IEndpoint
     // Models
     public record Request(string Username, string Password);
 
-    public record Response(string Username, string Role);
-
     // Logic
     private static async Task<IResult> Handle(
         Request request,
