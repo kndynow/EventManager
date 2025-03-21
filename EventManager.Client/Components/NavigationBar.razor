@@ -1,0 +1,25 @@
+﻿@inject CustomAuthenticationStateProvider AuthStateProvider;
+
+
+<nav class="navBar-container">
+	<h3 class="welcome">Welcome, @userName!</h3>
+	<div class="navBar-item">Home</div>
+	<div class="navBar-item">Events</div>
+    
+	<div class="navBar-item btn-logout">Logout</div>
+</nav>
+
+@code {
+    private string? userName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            userName = user.FindFirst(c => c.Type == "unique_name")?.Value;
+        }
+    }
+}
