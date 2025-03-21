@@ -1,5 +1,6 @@
-@* @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize] *@
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims;
+@attribute [Authorize(Roles = "Admin")]
 @page "/home"
 
 <PageTitle>Event Manager</PageTitle>
