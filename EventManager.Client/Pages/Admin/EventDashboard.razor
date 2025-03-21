@@ -9,25 +9,25 @@
 
 @if (!showForm)
 {
-        <EventList Events="events" OnEdit="HandleEdit"/>
-        <button class="btn btn-primary" @onclick="HandleCreate">Publish New Event</button>
+    <EventList Events="events" OnEdit="HandleEdit"/>
+    <button class="btn btn-primary" @onclick="HandleCreate">Publish New Event</button>
 }
 else
 {
-        <GenericCard TItem="Event">
-            <HeaderTemplate>
-                <h3>@(isNew ? "Create New Event" : "Edit Event")</h3>
-            </HeaderTemplate>
-            <ChildContent>
-                <EventForm 
-                Event="_event"
-                IsNew="isNew"
-                OnSubmit="
-                HandleSubmit"
-                OnCancel="HandleCancel"
-                OnDelete="HandleDelete"/>
-            </ChildContent>
-        </GenericCard>
+    <GenericCard TItem="Event">
+        <HeaderTemplate>
+             <h3>@(isNew ? "Create New Event" : "Edit Event")</h3>
+        </HeaderTemplate>
+        <ChildContent>
+            <EventForm 
+             Event="_event"
+            IsNew="isNew"
+             OnSubmit="
+             HandleSubmit"
+             OnCancel="HandleCancel"
+              OnDelete="HandleDelete"/>
+        </ChildContent>
+    </GenericCard>
 }
 
 @code {
@@ -139,10 +139,10 @@ else
                 showForm = false;
             }
         }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error deleting event: {ex.Message}");
-            }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting event: {ex.Message}");
+        }
         
     }
 }

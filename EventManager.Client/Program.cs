@@ -12,7 +12,6 @@ builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
     sp.GetRequiredService<CustomAuthenticationStateProvider>()
 );
 
-
 builder.Services.AddAuthorizationCore(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
