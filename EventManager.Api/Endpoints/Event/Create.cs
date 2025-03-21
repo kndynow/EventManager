@@ -17,9 +17,11 @@ public class CreateEvent : IEndpoint
     )
     {
         var eventToCreate = request.Adapt<Event>();
+
         try
         {
             var createdEvent = await eventService.CreateEventAsync(eventToCreate);
+
             return TypedResults.Ok(createdEvent.Adapt<EventResponseDto>());
         }
         catch (KeyNotFoundException)

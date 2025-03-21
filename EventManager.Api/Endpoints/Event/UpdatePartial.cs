@@ -8,7 +8,7 @@ public class UpdateEventPartial : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPatch("/events/{id}", Handle).WithSummary("Update event");
+        app.MapPatch("/events/{id}", Handle).WithSummary("Update event partialy");
     }
 
     // Handle
