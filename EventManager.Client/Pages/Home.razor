@@ -1,5 +1,8 @@
-@* @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize] *@
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims;
+@attribute [Authorize(Roles ="Admin")] 
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager Navigation
 @page "/home"
 
 <PageTitle>Event Manager</PageTitle>
@@ -21,3 +24,27 @@
 	<button class="btn btn-primary">Sök evenemang</button>
 	<button class="btn btn-secondary">Skapa konto</button>
 </div>
+
+@code {
+    private ClaimsPrincipal _currentUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        _currentUser = authState.User;
+
+        // Debug: Output current user's role
+        var userRole = _currentUser.FindFirst(ClaimTypes.Role)?.Value;
+        Console.WriteLine($"Current role: {userRole}");
+
+        if (_currentUser.Identity.IsAuthenticated && userRole == "Admin")
+        {
+            // User has the "Admin" role, proceed with the page
+        }
+        else
+        {
+            // Redirect to access-denied page
+            Navigation.NavigateTo("/access-denied");
+        }
+    }
+}
