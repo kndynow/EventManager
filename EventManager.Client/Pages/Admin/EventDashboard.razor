@@ -1,7 +1,7 @@
 ﻿@page "/eventdashboard"
-@using System.Net.Http.Json
 @using EventManager.Client.Components.Admin
 @using EventManager.Client.Models
+@using System.Net.Http.Json
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
 
@@ -36,11 +36,11 @@ else
     private List<Event> events = [];
     private Event _event = new()
     {
-        Name = "New Event",
+        @* Name = "New Event",
         Description = "",
-        Start = DateTime.UtcNow,
-        End = DateTime.UtcNow,
-        MaxAttendees = 100
+        StartTime = DateTime.UtcNow,
+        EndTime = DateTime.UtcNow,
+        MaxAttendees = 100 *@
     };
 
     protected override async Task OnInitializedAsync()
@@ -64,8 +64,8 @@ else
         {
             Name = "Nytt event",
             Description = "",
-            Start = DateTime.UtcNow,
-            End = DateTime.UtcNow.AddHours(1),
+            StartTime = DateTime.UtcNow,
+            EndTime = DateTime.UtcNow.AddHours(1),
             MaxAttendees = 100
         };
         isNew = true;

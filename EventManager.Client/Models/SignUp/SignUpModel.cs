@@ -21,7 +21,6 @@ namespace EventManager.Client.Models.SignUp
         [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
         [MinLength(6, ErrorMessage = "Password must be at least 6 characters long")]
         [MaxLength(24, ErrorMessage = "Password cannot be longer than 24 characters")]
-
         public string? RepeatPassword { get; set; }
     }
 }

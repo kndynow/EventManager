@@ -16,14 +16,14 @@
 
     <div class="form-group mb-3">
         <label for="timestart">Event Start</label>
-        <InputDate id="timestart" class="form-control" @bind-Value="Event.Start" />
-        <ValidationMessage For="@(() => Event.Start)" />
+        <InputDate id="timestart" class="form-control" @bind-Value="Event.StartTime" />
+        <ValidationMessage For="@(() => Event.StartTime)" />
     </div>
 
     <div class="form-group mb-3">
         <label for="timeend">Event End</label>
-        <InputDate id="timeend" class="form-control" @bind-Value="Event.End" />
-        <ValidationMessage For="@(() => Event.End)" />
+        <InputDate id="timeend" class="form-control" @bind-Value="Event.EndTime" />
+        <ValidationMessage For="@(() => Event.EndTime)" />
     </div>
 
     <div class="form-group mb-3">
