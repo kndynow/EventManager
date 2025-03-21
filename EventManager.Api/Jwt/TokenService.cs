@@ -1,7 +1,7 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
 using static EventManager.Api.Jwt.TokenService;
 
 namespace EventManager.Api.Jwt
@@ -13,9 +13,9 @@ namespace EventManager.Api.Jwt
             public string GenerateToken(string username, string role);
         }
 
-        private readonly IConfiguration _config; 
+        private readonly IConfiguration _config;
 
-        public TokenService (IConfiguration config)
+        public TokenService(IConfiguration config)
         {
             _config = config;
         }
@@ -29,15 +29,16 @@ namespace EventManager.Api.Jwt
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim(ClaimTypes.Role, role)
-                }),
+                Subject = new ClaimsIdentity(
+                    new[] { new Claim(ClaimTypes.Name, username), new Claim(ClaimTypes.Role, role) }
+                ),
                 Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = _config["JwtSettings:Issuer"],
                 Audience = _config["JwtSettings:Audience"],
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                ),
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);

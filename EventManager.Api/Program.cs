@@ -1,24 +1,26 @@
+using System.Reflection;
 using System.Text;
 using EventManager.Api.Endpoints;
 using EventManager.Api.Jwt;
+using EventManager.Core;
 using EventManager.Core.Validator;
-using static EventManager.Api.Jwt.TokenService;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using EventManager.Core;
-using System.Text;
+using static EventManager.Api.Jwt.TokenService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //Avoiding CORS-error
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowBlazorClient", policy =>
-    {
-        policy.WithOrigins("https://localhost:7274") 
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
+    options.AddPolicy(
+        "AllowBlazorClient",
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:7274").AllowAnyMethod().AllowAnyHeader();
+        }
+    );
 });
 
 // Configure MongoDB connection string
@@ -31,35 +33,39 @@ builder.Services.AddSingleton<MongoDbContext>();
 builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IUserService, UserService>();
-builder.Services.AddSingleton<IEventService, EventService>(); 
+builder.Services.AddSingleton<IEventService, EventService>();
 builder.Services.AddSingleton<IEventRepository, EventRepository>();
 builder.Services.AddSingleton<IUserValidator, UserValidator>();
-builder.Services.AddSingleton<IEventValidator, EventValidator>(); 
+builder.Services.AddSingleton<IEventValidator, EventValidator>();
 
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    //In production = true
-    //options.RequireHttpsMetadata = true;
-
-    options.TokenValidationParameters = new TokenValidationParameters
+builder
+    .Services.AddAuthentication(options =>
     {
-        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-        ValidAudience = builder.Configuration["JwtSettings:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"])),
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true
-    };
-});
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        //In production = true
+        //options.RequireHttpsMetadata = true;
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidAudience = builder.Configuration["JwtSettings:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"])
+            ),
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+        };
+    });
 
 builder.Services.AddAuthorization();
+TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 
