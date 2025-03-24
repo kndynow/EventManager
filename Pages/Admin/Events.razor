@@ -1,0 +1,113 @@
+﻿@page "/admin/events"
+@using EventManager.Client.Models
+@using EventManager.Client.Services
+@inject IEventService EventService
+
+<PageTitle>Admin - Events</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Event Management</h1>
+        <button class="btn btn-primary" @onclick="HandleCreate">
+            <i class="bi bi-plus-circle"></i> Create New Event
+        </button>
+    </div>
+
+    @if (showForm)
+    {
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">@(isNew ? "Create New Event" : "Edit Event")</h5>
+                <EventForm Event="_event" IsNew="@isNew" OnSubmit="HandleSubmit" OnCancel="@(() => showForm = false)" OnDelete="HandleDelete" />
+            </div>
+        </div>
+    }
+
+    <EventList Events="events" OnEdit="HandleEdit" />
+</div>
+
+@code {
+    private bool showForm = false;
+    private bool isNew = true;
+    private List<Event> events = new List<Event>{
+        new Event {
+            Id = 1, 
+            Name = "Putte Bajsar i Parken 2025",
+            Description = "Putte Bajsar i Parken 2025: En unik festival där besökare kan uppleva den ultimata blandningen av musik, natur och... oväntad flatulens! Kom och se Putte göra det han gör bäst, mitt i vår vackra park. Glöm inte att ta med stövlar och näsklämma!",
+            Start = DateTime.Parse("2025-06-17"),
+            End = DateTime.Parse("2025-06-19"),
+            Location = "Central Park",
+            Price = 199.99m,
+            AvailableTickets = 500,
+            MaxAttendees = 500,
+            Category = "Music",
+            IsActive = true,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        },
+        new Event {
+            Id = 2, 
+            Name = "Kalle Anka's Underbara Byxlösa Äventyr 2026",
+            Description = "Kalle Anka's Underbara Byxlösa Äventyr 2026: En hisnande upplevelse där Kalle Anka tappar sina byxor och måste navigera genom Ankeborg helt exponerad! Följ med på en skrattfylld resa full av pinsamma situationer, kreativa gömställen och oväntade hjältar. Glöm inte att ta med en extra uppsättning byxor - man vet aldrig när Kalle kan behöva dem!",
+            Start = DateTime.Parse("2026-07-01"),
+            End = DateTime.Parse("2026-07-03"),
+            Location = "Ankeborg",
+            Price = 149.99m,
+            AvailableTickets = 1000,
+            MaxAttendees = 1000,
+            Category = "Comedy",
+            IsActive = true,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
+        }
+    };
+    private Event _event = new()
+    {
+        Name = "",
+        Description = "",
+        Start = DateTime.Now,
+        End = DateTime.Now,
+        Location = "",
+        Price = 0,
+        AvailableTickets = 0,
+        MaxAttendees = 0,
+        IsActive = true,
+        CreatedAt = DateTime.Now
+    };
+
+    private void HandleCreate(){
+        _event = new Event
+        {
+            Name = "",
+            Description = "",
+            Start = DateTime.Now,
+            End = DateTime.Now,
+            Location = "",
+            Price = 0,
+            AvailableTickets = 0,
+            MaxAttendees = 0,
+            IsActive = true,
+            CreatedAt = DateTime.Now
+        };
+        isNew = true;
+        showForm = true;
+    }
+
+    private void HandleEdit(int id){
+        _event = events.Find(ev => ev.Id == id);
+        isNew = false;
+        showForm = true;
+    }
+
+    private void HandleSubmit(){
+        if(isNew){
+            events.Add(_event);
+        }
+        showForm = false;
+    }
+
+    private void HandleDelete(int id){
+        events.RemoveAll(ev => ev.Id == id);
+        showForm = false;
+    }
+}

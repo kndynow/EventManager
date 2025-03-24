@@ -1,0 +1,35 @@
+﻿@inherits LayoutComponentBase
+
+<header class="top-row">
+    <div class="nav-menu">
+        <div class="nav-item">
+            <NavLink href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item">
+            <NavLink href="events/list">
+                <span class="bi bi-calendar-event" aria-hidden="true"></span> Events
+            </NavLink>
+        </div>
+        <div class="nav-item">
+            <NavLink href="admin/events">
+                <span class="bi bi-gear-fill" aria-hidden="true"></span> Admin
+            </NavLink>
+        </div>
+    </div>
+</header>
+
+<div class="page">
+    <main>
+        <div class="container">
+            @Body
+        </div>
+    </main>
+</div>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>

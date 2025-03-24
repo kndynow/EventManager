@@ -1,0 +1,117 @@
+@using EventManager.Client.Layout
+@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="/" class="brand">
+                            <i class="bi bi-calendar-event"></i>
+                            Event Manager
+                        </a>
+                    </div>
+                    <div class="user-menu">
+                        <a href="/profile" class="btn btn-outline-primary">
+                            <i class="bi bi-person-circle"></i>
+                            Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <article class="content">
+            <div class="container">
+                @Body
+            </div>
+        </article>
+    </main>
+</div>
+
+<style>
+    .navbar {
+        background-color: #718eae;
+        padding: 0.25rem 1rem;
+        min-height: 40px;
+    }
+
+    .navbar-brand {
+        font-size: 1.1rem;
+        font-weight: 600;
+        padding: 0.25rem 0;
+    }
+
+    .nav-link {
+        font-size: 0.9rem;
+        padding: 0.25rem 1rem;
+    }
+
+    .navbar-toggler {
+        padding: 0.25rem 0.5rem;
+        font-size: 1rem;
+    }
+
+    .page {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        min-height: calc(100vh - 2rem);
+        margin-top: 2rem;
+    }
+
+    main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .top-row {
+        background-color: #718eae;
+        border-bottom: 1px solid #d6d5d5;
+        height: 32px;
+        padding: 0.25rem 1rem;
+        display: flex;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 999;
+    }
+
+    .top-row .container {
+        width: 100%;
+        padding: 0;
+    }
+
+    .brand {
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .user-menu .btn {
+        font-size: 0.9rem;
+        padding: 0.25rem 0.75rem;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .content {
+        padding-top: 2rem;
+    }
+</style> 
