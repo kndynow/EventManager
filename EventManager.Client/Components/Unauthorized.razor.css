@@ -18,7 +18,7 @@
     border-radius:500px;
 }
 
-.sorry {
-    margin-top:1rem;
-    font-weight:bold;
+.notAuhtorizedMessage {
+    margin-top: 1rem;
+    font-weight: bold;
 }
