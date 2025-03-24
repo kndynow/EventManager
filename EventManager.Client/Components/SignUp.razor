@@ -57,14 +57,13 @@
 
 		if (response.IsSuccessStatusCode)
 		{
-			Message = $"Sign up successful! Redirecting to login-page in {countdown} seconds...";
 			MessageClass = "alert alert-success";
 
 			for (int i = 5; i > 0; i--)
 			{
 				countdown = i;
 				Message = $"Sign up successful! Redirecting to login-page {countdown} seconds...";
-				StateHasChanged(); // Manually trigger a UI update
+				StateHasChanged(); // Manually trigger UI update
 				await Task.Delay(1000);
 			}
 			Navigation.NavigateTo("/");
