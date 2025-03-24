@@ -1,15 +1,36 @@
 ﻿@inherits LayoutComponentBase
 
 <CascadingAuthenticationState>
-	<div class="page">
-@* 		<div class="nav">
-			<NavMenu />
-		</div> *@
+	<header class="top-row">
+		<div class="nav-menu">
+			<div class="nav-item">
+				<NavLink href="" Match="NavLinkMatch.All">
+					<span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
+				</NavLink>
+			</div>
+			<div class="nav-item">
+				<NavLink href="events/list">
+					<span class="bi bi-calendar-event" aria-hidden="true"></span> Events
+				</NavLink>
+			</div>
+			<div class="nav-item">
+				<NavLink href="eventdashboard">
+					<span class="bi bi-gear-fill" aria-hidden="true"></span> Admin
+				</NavLink>
+			</div>
+			<div class="nav-item">
+				<NavLink href="login">
+					<span class="bi bi-gear-fill" aria-hidden="true"></span> Login
+				</NavLink>
+			</div>
+		</div>
+	</header>
 
-		<main>
-			<article class="content px-4">
+	<div class="page">
+		<main class="main">
+			<div class="container">
 				@Body
-			</article>
+			</div>
 		</main>
 	</div>
 </CascadingAuthenticationState>

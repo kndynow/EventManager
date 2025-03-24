@@ -36,11 +36,20 @@ else
     private List<Event> events = [];
     private Event _event = new()
     {
-        @* Name = "New Event",
+        Name = "Nytt event",
         Description = "",
+        Location = "",
+        ShortDescription = "",
+        ImageUrl = "",
         StartTime = DateTime.UtcNow,
         EndTime = DateTime.UtcNow,
-        MaxAttendees = 100 *@
+        CreatedAt = DateTime.UtcNow,
+        IsActive = true,
+        Type = EventType.Concert,
+        MaxAttendees = 100,
+        AvailableTickets = 100,
+        Price = 0,
+
     };
 
     protected override async Task OnInitializedAsync()
@@ -64,6 +73,12 @@ else
         {
             Name = "Nytt event",
             Description = "",
+            Location = "",
+            Price = 0,
+            AvailableTickets = 100,
+            Type = EventType.Concert,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow,
             StartTime = DateTime.UtcNow,
             EndTime = DateTime.UtcNow.AddHours(1),
             MaxAttendees = 100
