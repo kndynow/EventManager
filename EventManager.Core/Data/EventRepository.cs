@@ -63,10 +63,17 @@ namespace EventManager.Core.Data
             var update = Builders<Event>
                 .Update.Set(e => e.Name, updatedEvent.Name)
                 .Set(e => e.Description, updatedEvent.Description)
-                .Set(e => e.Type, updatedEvent.Type)
+                .Set(e => e.ShortDescription, updatedEvent.ShortDescription)
                 .Set(e => e.StartTime, updatedEvent.StartTime)
                 .Set(e => e.EndTime, updatedEvent.EndTime)
-                .Set(e => e.MaxAttendees, updatedEvent.MaxAttendees);
+                .Set(e => e.Location, updatedEvent.Location)
+                .Set(e => e.Price, updatedEvent.Price)
+                .Set(e => e.AvailableTickets, updatedEvent.AvailableTickets)
+                .Set(e => e.MaxAttendees, updatedEvent.MaxAttendees)
+                .Set(e => e.ImageUrl, updatedEvent.ImageUrl)
+                .Set(e => e.Type, updatedEvent.Type)
+                .Set(e => e.IsActive, updatedEvent.IsActive)
+                .Set(e => e.CreatedAt, updatedEvent.CreatedAt);
 
             await _events.UpdateOneAsync(filter, update);
         }
