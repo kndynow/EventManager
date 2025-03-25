@@ -76,10 +76,12 @@
 </div>
 
 @code {
+
     private List<Event> events = [];
 
     protected override async Task OnInitializedAsync()
     {
+
         try
         {
             var loadedEvents = await HttpClient.GetFromJsonAsync<List<Event>>("/events") ?? [];
