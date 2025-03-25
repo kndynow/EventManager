@@ -233,15 +233,15 @@ body {
 }
 
 /* Form styles */
-.form-control {
+/* .form-control {
   border-radius: 4px;
   border: 1px solid var(--border-color);
-}
+} */
 
-.form-control:focus {
+/* .form-control:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
-}
+} */
 
 /* User menu */
 .user-menu {

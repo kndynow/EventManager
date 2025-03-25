@@ -9,8 +9,6 @@ public class User
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; }
     public string Username { get; set; }
-
-    // public string Email { get; set; }
     public string PasswordHash { get; set; }
     public string Role { get; set; } = UserRoles.User; // Default role
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

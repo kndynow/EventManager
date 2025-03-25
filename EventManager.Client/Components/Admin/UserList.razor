@@ -2,8 +2,8 @@
     <thead>
         <tr>
             <th>Username</th>
-            <th>Email</th>
             <th>Role</th>
+            <th>Created At</th>
         </tr>
     </thead>
     <tbody>
@@ -11,8 +11,8 @@
         {
             <tr>
                 <td>@user.Username</td>
-                @* <td>@user.Email</td> *@
                 <td>@user.Role</td>
+                <td>@user.CreatedAt</td>
                 <td>
                     <button class="btn btn-primary" @onclick="(() => OnEdit.InvokeAsync(user.Id))">Edit</button>
                 </td>
