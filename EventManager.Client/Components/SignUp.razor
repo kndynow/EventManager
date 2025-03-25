@@ -6,7 +6,7 @@
 	<div class="container">
 		<DataAnnotationsValidator />
 
-		<h1>Sign up</h1>
+		<h1 class="text-color">Sign up</h1>
 		<div class="form-group">
 			<label for="Username">Enter username: </label>
 			<InputText id="Username" class="input" @bind-Value="@SignUpModel.Username" />
@@ -34,7 +34,7 @@
 		<button type="submit" class="btn">Sign up</button>
 
 		<div class="login-formgroup">
-			<p>Already have an account? <NavLink href="/">Log in here</NavLink></p>
+			<p class="text-color">Already have an account? <NavLink href="/">Log in here</NavLink></p>
 		</div>
 	</div>
 </EditForm>
@@ -57,13 +57,14 @@
 
 		if (response.IsSuccessStatusCode)
 		{
+			Message = $"Sign up successful! Redirecting to login-page in {countdown} seconds...";
 			MessageClass = "alert alert-success";
 
 			for (int i = 5; i > 0; i--)
 			{
 				countdown = i;
 				Message = $"Sign up successful! Redirecting to login-page {countdown} seconds...";
-				StateHasChanged(); // Manually trigger UI update
+				StateHasChanged(); // Manually trigger a UI update
 				await Task.Delay(1000);
 			}
 			Navigation.NavigateTo("/");
