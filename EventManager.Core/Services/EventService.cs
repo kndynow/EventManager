@@ -86,15 +86,15 @@ namespace EventManager.Core.Services
         }
 
         //Deletes an event
-        public Task<Event> DeleteEventAsync(string id)
+        public async Task<Event> DeleteEventAsync(string id)
         {
-            var ev = GetEventByIdAsync(id);
+            var ev = await GetEventByIdAsync(id);
             if (ev is null)
             {
                 throw new KeyNotFoundException("Event not found.");
             }
 
-            _eventRepository.DeleteAsync(id);
+            await _eventRepository.DeleteAsync(id);
             return ev;
         }
     }

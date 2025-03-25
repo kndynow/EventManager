@@ -10,6 +10,11 @@ public interface IUserService
     //User login and registration, applies to both admin and user
     Task<User?> Register(string username, string password);
     Task<User?> Login(string username, string password);
+
+    Task<IEnumerable<User>> GetAllUsersAsync();
+    Task<User> GetUserByIdAsync(string id);
+    Task<User> UpdateUserPartialAsync(string id, User updatedUser);
+    Task<User> DeleteUserAsync(string id);
 }
 
 public class UserService : IUserService
@@ -23,6 +28,7 @@ public class UserService : IUserService
         _userValidator = userValidator;
     }
 
+    // Handles the user login
     public async Task<User?> Login(string username, string password)
     {
         var user = await _userRepository.GetByUsernameAsync(username);
@@ -35,6 +41,7 @@ public class UserService : IUserService
         return user;
     }
 
+    // Handles the user registration
     public async Task<User?> Register(string username, string password)
     {
         if (!_userValidator.IsValidUsername(username))
@@ -59,5 +66,46 @@ public class UserService : IUserService
 
         await _userRepository.CreateAsync(newUser);
         return newUser;
+    }
+
+    public async Task<IEnumerable<User>> GetAllUsersAsync()
+    {
+        return await _userRepository.GetAllAsync();
+    }
+
+    public async Task<User> GetUserByIdAsync(string id)
+    {
+        var user = await _userRepository.GetByIdAsync(id);
+        //If event is not found, throw an exception
+        if (user == null)
+        {
+            throw new KeyNotFoundException("User not found.");
+        }
+
+        return user;
+    }
+
+    public async Task<User> UpdateUserPartialAsync(string id, User updatedUser)
+    {
+        var user = await _userRepository.GetByIdAsync(id);
+        if (user == null)
+        {
+            throw new KeyNotFoundException("User not found.");
+        }
+
+        await _userRepository.UpdatePartialAsync(updatedUser);
+        return updatedUser;
+    }
+
+    public async Task<User> DeleteUserAsync(string id)
+    {
+        var user = await GetUserByIdAsync(id);
+        if (user is null)
+        {
+            throw new KeyNotFoundException("Event not found.");
+        }
+
+        await _userRepository.DeleteAsync(id);
+        return user;
     }
 }
