@@ -1,8 +1,8 @@
 ﻿@page "/events"
+@using System.Net.Http.Json
 @using EventManager.Client.Models
 @using EventManager.Client.Services
 @inject HttpClient HttpClient
-@using System.Net.Http.Json
 @inject NavigationManager NavigationManager
 
 <div class="container">
@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="d-grid gap-2 mt-3">
-                                <a href="/events/@evt.Id" class="btn btn-primary">View Details</a>
+                                <a href="@($"/events/{@evt.Id}")" class="btn btn-primary">View Details</a>
                             </div>
                         </div>
                     </div>

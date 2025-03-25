@@ -1,8 +1,8 @@
-﻿@page "/events/{Id:int}"
+﻿@page "/events/{Id}"
 @using EventManager.Client.Models
 @using EventManager.Client.Services
-@inject HttpClient HttpClient
 @using System.Net.Http.Json
+@inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
 
 <div class="container">
@@ -11,6 +11,7 @@
         <div class="text-center">
             <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
+                <h3>Fel ställe mannen!</h3>
             </div>
         </div>
     }
@@ -84,7 +85,7 @@
 
 @code {
     [Parameter]
-    public int Id { get; set; }
+    public string Id { get; set; }
 
     private Event evt;
     private int quantity = 1;
@@ -93,9 +94,9 @@
     {
         try
         {
-            if (Id > 0)
+            if (!string.IsNullOrEmpty(Id))
             {
-                var loadedEvents = await HttpClient.GetFromJsonAsync<List<Event>>("/events{Id}") ?? [];
+                var evt = await HttpClient.GetFromJsonAsync<Event>($"/events/{Id}");
                 if (evt == null)
                 {
                     NavigationManager.NavigateTo("/");
