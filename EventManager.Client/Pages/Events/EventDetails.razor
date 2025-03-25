@@ -96,7 +96,7 @@
         {
             if (!string.IsNullOrEmpty(Id))
             {
-                var evt = await HttpClient.GetFromJsonAsync<Event>($"/events/{Id}");
+                evt = await HttpClient.GetFromJsonAsync<Event>($"/events/{Id}");
                 if (evt == null)
                 {
                     NavigationManager.NavigateTo("/");

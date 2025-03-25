@@ -71,7 +71,7 @@
     {
         try
         {
-            var loadedEvents = await HttpClient.GetFromJsonAsync<List<Event>>("/events") ?? [];
+            events = await HttpClient.GetFromJsonAsync<List<Event>>("/events") ?? [];
         }
         catch (Exception)
         {
