@@ -9,7 +9,7 @@
 	<div class="container">
 		<DataAnnotationsValidator />
 
-		<h1>Login</h1>
+		<h1 class="text-color">Login</h1>
 		<div class="form-group">
 			<label for="UserName">Username:</label>
 			<InputText class="input" id="UserName" @bind-Value="LoginViewModel.UserName" />
@@ -30,7 +30,7 @@
 		<button type="submit" class="btn">Log In</button>
 
 		<div class="form-group sign-up-group">
-			<p>Don't have an account? <NavLink href="/signup">Sign up here</NavLink></p>
+			<p class="text-color">Don't have an account? <NavLink href="/signup">Sign up here</NavLink></p>
 		</div>
 	</div>
 </EditForm>
