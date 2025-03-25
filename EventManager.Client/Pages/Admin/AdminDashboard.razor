@@ -1,0 +1,184 @@
+﻿@page "/admindashboard"
+@using EventManager.Client.Components.Admin
+@using EventManager.Client.Models
+@using System.Net.Http.Json
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+
+<h1>Manage Events</h1>
+
+@if (!showForm)
+{
+    <button class="btn btn-primary" @onclick="HandleCreate">Publish New Event</button>
+    <EventList Events="events" OnEdit="HandleEdit"/>
+    
+}
+else
+{
+        <GenericCard TItem="Event">
+            <HeaderTemplate>
+                 <h3>@(isNew ? "Create New Event" : "Edit Event")</h3>
+            </HeaderTemplate>
+            <ChildContent>
+                <EventForm 
+                 Event="_event"
+                IsNew="isNew"
+                 OnSubmit="
+                 HandleSubmit"
+             OnCancel="HandleCancel"
+              OnDelete="HandleDelete"/>
+        </ChildContent>
+    </GenericCard>
+}
+
+@code {
+    private bool isNew = true;
+    private bool showForm = false;
+    private List<Event> events = [];
+    private Event _event = new()
+    {
+        Name = "Nytt event",
+        Description = "",
+        Location = "",
+        ShortDescription = "",
+        ImageUrl = "",
+        StartTime = DateTime.UtcNow,
+        EndTime = DateTime.UtcNow,
+        CreatedAt = DateTime.UtcNow,
+        IsActive = true,
+        Type = EventType.Concert,
+        MaxAttendees = 100,
+        AvailableTickets = 100,
+        Price = 0,
+
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            events = await HttpClient.GetFromJsonAsync<List<Event>>("/events") ?? [];
+                
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching events: {ex.Message}");
+            events = [];
+        }
+    }
+    
+    //Create Event
+    private async Task HandleCreate()
+    {
+        _event = new()
+        {
+            Name = "Nytt event",
+            Description = "",
+            Location = "",
+            Price = 0,
+            AvailableTickets = 100,
+            Type = EventType.Concert,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow,
+            StartTime = DateTime.UtcNow,
+            EndTime = DateTime.UtcNow.AddHours(1),
+            MaxAttendees = 100
+        };
+        isNew = true;
+        showForm = true;
+    }
+
+    //Update Event
+    private async Task HandleEdit(string id)
+    {
+        try
+        {
+            var eventToEdit = await HttpClient.GetFromJsonAsync<Event>($"/events/{id}");
+            if (eventToEdit != null)
+            {
+                _event = eventToEdit;
+                isNew = false;
+                showForm = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error editing event: {ex.Message}");
+        }
+    }
+
+    // Submit Event
+    private async Task HandleSubmit()
+    {
+        if (isNew)
+        {
+            try
+            {
+                await HttpClient.PostAsJsonAsync("/events", _event);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating event: {ex.Message}");
+            }
+        }
+        else
+        {
+            try
+            {
+                await HttpClient.PatchAsJsonAsync($"/events/{_event.Id}", _event);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating event: {ex.Message}");
+            }
+        }
+        events = await HttpClient.GetFromJsonAsync<List<Event>>("/events") ?? [];
+        showForm = false;
+    }
+
+    // Cancel create/update
+    private void HandleCancel()
+    {
+        showForm = false;
+    }
+
+    // Delete Event
+    private async Task HandleDelete(string id)
+    {
+        try
+        {
+            var response = await HttpClient.DeleteAsync($"/events/{_event.Id}");
+            if (response.IsSuccessStatusCode)
+            {
+                events = await HttpClient.GetFromJsonAsync<List<Event>>("/events") ?? [];
+                showForm = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting event: {ex.Message}");
+        }
+        
+    }
+}
+
+
+
+@* private List<Event> dummyEvents = new List<Event>{
+        new Event {
+            Id=1, 
+            Name="Putte Bajsar i Parken 2025",
+            Description="Putte Bajsar i Parken 2025: En unik festival där besökare kan uppleva den ultimata blandningen av musik, natur och... oväntad flatulens! Kom och se Putte göra det han gör bäst, mitt i vår vackra park. Glöm inte att ta med stövlar och näsklämma!",
+            Start = DateTime.Parse("2025-06-17"),
+            End=DateTime.Parse("2025-06-19"),
+            MaxAttendees=500
+        },
+        new Event {
+            Id=2, 
+            Name="Kalle Anka's Underbara Byxlösa Äventyr 2026",
+            Description="Kalle Anka's Underbara Byxlösa Äventyr 2026: En hisnande upplevelse där Kalle Anka tappar sina byxor och måste navigera genom Ankeborg helt exponerad! Följ med på en skrattfylld resa full av pinsamma situationer, kreativa gömställen och oväntade hjältar. Glöm inte att ta med en extra uppsättning byxor - man vet aldrig när Kalle kan behöva dem!",
+            Start = DateTime.Parse("2026-07-01"),
+            End=DateTime.Parse("2026-07-03"),
+            MaxAttendees=1000
+        }
+    }; *@

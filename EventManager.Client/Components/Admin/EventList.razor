@@ -1,29 +1,52 @@
-﻿<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Event Start</th>
-            <th>Event End</th>
-            <th>Maximum Attendees</th>
-        </tr>
-    </thead>
-    <tbody>
+﻿<div class="container">
+    <div class="row">
         @foreach (var evnt in Events)
         {
-            <tr>
-                <td>@evnt.Name</td>
-                <td>@evnt.Description</td>
-                <td>@evnt.StartTime</td>
-                <td>@evnt.EndTime</td>
-                <td>@evnt.MaxAttendees</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="(() => OnEdit.InvokeAsync(evnt.Id))">Edit</button>
-                </td>
-            </tr>
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 align-self-center">
+                                <h3 class="card-title">@evnt.Name</h3>
+                                <p class="card-text">@evnt.ShortDescription</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Date:</strong> @evnt.StartTime.ToString("yyyy-MM-dd")</p>
+                                <p><strong>Time:</strong> @evnt.StartTime.ToString("HH:mm") -
+                                    @evnt.EndTime.ToString("HH:mm")
+                                </p>
+                                <p><strong>Location:</strong> @evnt.Location</p>
+                                <p><strong>Price:</strong> @evnt.Price SEK</p>
+
+                            </div>
+                            <button class="btn btn-primary" @onclick="(() => OnEdit.InvokeAsync(evnt.Id))">Edit
+                                Event</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+</div>
+
+<style>
+    .container {
+        padding: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+</style>
+
 @code {
     // EventList takes a list of event objects as parameter to be displayed
     [Parameter]
