@@ -48,18 +48,25 @@
 						<div class="card border-0">
 							<div class="card-body">
 								<h5 class="card-title">Book Tickets</h5>
-								<form @onsubmit="HandleSubmit">
+								<EditForm Model="evt" OnValidSubmit="HandleSubmit">
+
 									<div class="form-group">
 										<label for="quantity" class="form-label">Number of Tickets</label>
 										<input type="number" class="form-control" id="quantity" @bind="quantity" min="1"
-											   max="2" required>
+										max="8" required>
+
 									</div>
-									<div class="ticket-limit">Maximum 2 tickets per account</div>
+									<div class="ticket-limit">Total tickets available: @evt.AvailableTickets</div>
 									<div class="total-price">
 										Total: <span class="price-number">@(evt.Price * quantity)</span> Kr
 									</div>
 									<button type="submit" class="btn btn-primary">Book Now</button>
-								</form>
+
+									@if (!string.IsNullOrEmpty(Message))
+									{
+										<div class="@MessageClass">@Message</div>
+									}
+								</EditForm>
 							</div>
 						</div>
 					</div>
@@ -89,6 +96,9 @@
 	private Event evt;
 	private int quantity = 1;
 
+	private string? Message;
+	private string? MessageClass;
+
 	protected override async Task OnInitializedAsync()
 	{
 		try
@@ -104,12 +114,39 @@
 
 	private async Task HandleSubmit()
 	{
-		if (quantity <= 0 || quantity > 2)
+		try
 		{
-			return;
-		}
+			if (evt.AvailableTickets >= quantity)
+			{
+				evt.AvailableTickets = evt.AvailableTickets - quantity;
 
-		// TODO: Add the event to the cart and redirect to the cart page
-		NavigationManager.NavigateTo("/");
+				var response = await HttpClient.PatchAsJsonAsync($"/events/{evt.Id}", evt);
+
+				if (response.IsSuccessStatusCode)
+				{
+					MessageClass = "booking-successful";
+					Message = $"{quantity} tickets booked!";
+
+				}
+				else
+				{			
+					MessageClass = "booking-unsuccsesful";
+					Message = $"Failed to purchase tickets {response.ReasonPhrase}";
+				}
+			}
+
+			else
+			{
+				MessageClass = "booking-unsuccsesful";
+				Message = "You cannot book more tickets than there are tickets available.";
+			}
+			StateHasChanged();
+		}
+		
+		catch (Exception ex)
+		{
+        Console.WriteLine($"Error updating tickets: {ex.Message}");
+        Message = "An error occurred while processing your request.";
+		}
 	}
 }
