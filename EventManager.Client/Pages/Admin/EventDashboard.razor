@@ -1,4 +1,7 @@
 ﻿@page "/eventdashboard"
+@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims;
+@attribute [Authorize(Roles = "Admin")]
 @using EventManager.Client.Components.Admin
 @using EventManager.Client.Models
 @using System.Net.Http.Json
