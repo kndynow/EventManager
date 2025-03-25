@@ -1,0 +1,99 @@
+.container {
+  padding-top: 0.5rem;
+  padding-bottom: 2rem;
+  padding-left: 8rem !important;
+  padding-right: 8rem !important;
+}
+.back-button {
+  margin-top: 1rem;
+}
+.card {
+  border: none;
+  box-shadow: none;
+  transition: none;
+  transform: none !important;
+  background-color: transparent;
+}
+.card:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+.card-body {
+  padding: 1.5rem;
+  transition: none;
+  color: white;
+}
+.card-title {
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+.card-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+.image-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: none;
+  border-radius: 10px;
+}
+.event-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+.info-item i {
+  color: #b141a9;
+}
+.btn {
+  border-radius: 0;
+  transition: none;
+}
+.btn:hover {
+  transform: none;
+}
+.btn-outline-secondary {
+  border: none;
+  color: white;
+  background: transparent;
+  padding: 0.5rem 1rem;
+  transition: opacity 0.3s ease;
+}
+.btn-outline-secondary:hover {
+  background: transparent;
+  color: white;
+  opacity: 0.8;
+}
+.btn-outline-secondary i {
+  margin-right: 0.5rem;
+  transition: transform 0.3s ease;
+}
+.btn-outline-secondary:hover i {
+  transform: translateX(-3px);
+}
+@media (max-width: 768px) {
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
