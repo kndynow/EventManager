@@ -132,8 +132,14 @@ h5.card-title {
   color: rgba(255, 255, 255, 0.6);
   margin-bottom: 0.8rem;
 }
+.booking-successful {
+    color: #00FF40;
+}
+.booking-unsuccsesful {
+    color: #fd5c63;
+}
 @media (max-width: 768px) {
-  .container {
+    .container {
     padding-left: 1rem !important;
     padding-right: 1rem !important;
   }
