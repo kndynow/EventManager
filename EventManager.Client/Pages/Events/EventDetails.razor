@@ -11,7 +11,6 @@
         <div class="text-center">
             <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
-                <h3>Fel ställe mannen!</h3>
             </div>
         </div>
     }
@@ -94,21 +93,11 @@
     {
         try
         {
-            if (!string.IsNullOrEmpty(Id))
-            {
-                evt = await HttpClient.GetFromJsonAsync<Event>($"/events/{Id}");
-                if (evt == null)
-                {
-                    NavigationManager.NavigateTo("/");
-                }
-            }
-            else
-            {
-                NavigationManager.NavigateTo("/");
-            }
+            evt = await HttpClient.GetFromJsonAsync<Event>($"/events/{Id}");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Console.WriteLine($"Error fetching event: {ex.Message}");
             NavigationManager.NavigateTo("/");
         }
     }

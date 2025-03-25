@@ -5,6 +5,10 @@
     font-family: Arial;
 }
 
+.text-color {
+    color: #343231;
+}
+
 .container {
     max-width: 450px;
     min-height: 500px;
