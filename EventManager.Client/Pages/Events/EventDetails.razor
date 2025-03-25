@@ -1,0 +1,125 @@
+﻿@page "/events/{Id:int}"
+@using EventManager.Client.Models
+@using EventManager.Client.Services
+@inject HttpClient HttpClient
+@using System.Net.Http.Json
+@inject NavigationManager NavigationManager
+
+<div class="container">
+    @if (evt == null)
+    {
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="back-button mb-4">
+            <a href="/#upcoming-events" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Events
+            </a>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 border-0">
+                    <div class="card-body p-0">
+                        <div class="image-container">
+                            <img src="@evt.ImageUrl" class="img-fluid" alt="@evt.Name">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 border-0">
+                    <div class="card-body">
+                        <h1 class="card-title">@evt.Name</h1>
+                        <div class="card mb-4 border-0">
+                            <div class="card-body">
+                                <ul class="list-unstyled">
+                                    <li><strong>Date:</strong> @evt.StartTime.ToString("MMMM d, yyyy")</li>
+                                    <li><strong>Time:</strong> @evt.StartTime.ToString("HH:mm")</li>
+                                    <li><strong>Location:</strong> @evt.Location</li>
+                                    <li><strong>Price:</strong> @evt.Price.ToString("N0") Kr</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Book Tickets</h5>
+                                <form @onsubmit="HandleSubmit">
+                                    <div class="form-group">
+                                        <label for="quantity" class="form-label">Number of Tickets</label>
+                                        <input type="number" class="form-control" id="quantity" @bind="quantity" min="1"
+                                            max="2" required>
+                                    </div>
+                                    <div class="ticket-limit">Maximum 2 tickets per account</div>
+                                    <div class="total-price">
+                                        Total: <span class="price-number">@(evt.Price* quantity)</span> Kr
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Book Now</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <h5 class="card-title">Description</h5>
+                        <p class="card-text">
+                            @(new MarkupString(evt.Description.Replace("\n\n", "<br><br>")))
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Event evt;
+    private int quantity = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (Id > 0)
+            {
+                var loadedEvents = await HttpClient.GetFromJsonAsync<List<Event>>("/events{Id}") ?? [];
+                if (evt == null)
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/");
+            }
+        }
+        catch (Exception)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (quantity <= 0 || quantity > 2)
+        {
+            return;
+        }
+
+        // TODO: Add the event to the cart and redirect to the cart page
+        NavigationManager.NavigateTo("/");
+    }
+}

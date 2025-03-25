@@ -56,19 +56,19 @@
         <div class="row g-4">
             @foreach (var evt in events)
             {
-                            <div class="col-md-3">
-                                <div class="card h-100 border-0">
-                                    <a href="/events/@evt.Id" class="text-decoration-none">
-                                        <div class="card-body p-0">
-                                            <img src="@evt.ImageUrl" class="card-img-top" alt="@evt.Name">
-                                        </div>
-                                        <div class="card-body">
-                                            <h6 class="card-type">@evt.Type</h6>
-                                            <h5 class="card-title">@evt.Name</h5>
-                                        </div>
-                                    </a>
-                                </div>
+                 <div class="col-md-3">
+                    <div class="card h-100 border-0">
+                        <a href="/events/@evt.Id" class="text-decoration-none">
+                            <div class="card-body p-0">
+                                <img src="@evt.ImageUrl" class="card-img-top" alt="@evt.Name">
+                                    </div>
+                                    <div class="card-body">
+                                    <h6 class="card-type">@evt.Type</h6>
+                                <h5 class="card-title">@evt.Name</h5>
                             </div>
+                        </a>
+                    </div>
+                </div>
             }
         </div>
     </div>
