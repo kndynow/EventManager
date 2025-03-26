@@ -3,6 +3,8 @@ using System.Text;
 using EventManager.Api.Endpoints;
 using EventManager.Api.Jwt;
 using EventManager.Core;
+using EventManager.Core.Data;
+using EventManager.Core.Services;
 using EventManager.Core.Validator;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -29,18 +31,22 @@ builder
     .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
 
 builder.Services.AddOpenApi();
-builder.Services.AddScoped<MongoDbContext>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IEventRepository, EventRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IEventService, EventService>();
-builder.Services.AddSingleton<ITokenService, TokenService>();
+
+//Database
+builder.Services.AddSingleton<MongoDbContext>();
+
+//Repositories
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
-builder.Services.AddSingleton<IUserService, UserService>();
-builder.Services.AddSingleton<IEventService, EventService>();
 builder.Services.AddSingleton<IEventRepository, EventRepository>();
 builder.Services.AddSingleton<IBookingRepository, BookingRepository>();
+
+//Services
+builder.Services.AddSingleton<IEventService, EventService>();
+builder.Services.AddSingleton<ITokenService, TokenService>();
+builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IBookingService, BookingService>();
+
+//Validators
 builder.Services.AddSingleton<IUserValidator, UserValidator>();
 builder.Services.AddSingleton<IEventValidator, EventValidator>();
 
