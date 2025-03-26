@@ -1,4 +1,6 @@
-﻿@inject HttpClient HttpClient;
+﻿@using System.Text;
+@using System.Text.Json;
+@inject HttpClient HttpClient;
 
 <table class="container">
     <thead>
@@ -6,7 +8,8 @@
             <th>Username</th>
             <th>Role</th>
             <th>Created At</th>
-            <th>Delete user</th>
+@*             <th>Change roll</th>
+ *@         <th>Delete user</th>
         </tr>
     </thead>
     <tbody>
@@ -16,7 +19,17 @@
                 <td>@user.Username</td>
                 <td>@user.Role</td>
                 <td>@user.CreatedAt</td>
+@*                 <td>
 
+                    <select class="changeRole" @bind="user.Role">
+                        <option value="User">User</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+
+                    <button class="btn btn-success" @onclick="async () => await ChangeRole(user.Id, user.Role)">Change role</button>
+
+
+                </td> *@
                 <td class="center">
                     @if(@userToDelete == user.Id)
                     {
@@ -64,6 +77,28 @@
             Console.WriteLine("Failed to delete user");
         }
     }
+
+    // private async Task ChangeRole(string Id, string newRole)
+    // {
+
+    //     var userToEdit = await HttpClient.GetFromJsonAsync<User>($"/users/{Id}");
+
+    //     userToEdit.Role = newRole;
+
+    //     var jsonBody = JsonSerializer.Serialize(userToEdit);
+    //     var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+    //     var response = await HttpClient.PatchAsync($"/users/{Id}", content);
+
+    //     if(response.IsSuccessStatusCode)
+    //     {
+    //         StateHasChanged();
+    //     }
+    //     else
+    //     {
+    //         Console.WriteLine("Failed to update role");
+    //     }
+    // }
 }
 
 
