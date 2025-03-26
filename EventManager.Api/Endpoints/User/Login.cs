@@ -1,6 +1,6 @@
 using static EventManager.Api.Jwt.TokenService;
 
-namespace EventManager.Api.Endpoints.User;
+namespace EventManager.Api.Endpoints;
 
 public class Login : IEndpoint
 {

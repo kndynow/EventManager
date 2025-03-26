@@ -1,4 +1,4 @@
-namespace EventManager.Api.Endpoints.User;
+namespace EventManager.Api.Endpoints;
 
 public class Register : IEndpoint
 {
