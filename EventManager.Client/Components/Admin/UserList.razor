@@ -1,9 +1,15 @@
-﻿<table class="table">
+﻿@using System.Text;
+@using System.Text.Json;
+@inject HttpClient HttpClient;
+
+<table class="container">
     <thead>
         <tr>
             <th>Username</th>
             <th>Role</th>
             <th>Created At</th>
+@*             <th>Change roll</th>
+ *@         <th>Delete user</th>
         </tr>
     </thead>
     <tbody>
@@ -13,17 +19,40 @@
                 <td>@user.Username</td>
                 <td>@user.Role</td>
                 <td>@user.CreatedAt</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="(() => OnEdit.InvokeAsync(user.Id))">Edit</button>
+@*                 <td>
+
+                    <select class="changeRole" @bind="user.Role">
+                        <option value="User">User</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+
+                    <button class="btn btn-success" @onclick="async () => await ChangeRole(user.Id, user.Role)">Change role</button>
+
+
+                </td> *@
+                <td class="center">
+                    @if(@userToDelete == user.Id)
+                    {
+                        <span>Are you sure that you want to delete the user?</span><br />
+                        <button class="btn btn-success" @onclick="() => userToDelete=null"> No</button>
+                        <button class="btn btn-danger" @onclick="async () => await DeleteUser(user.Id)">Yes</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-danger" @onclick="() => userToDelete = user.Id">Delete user</button>
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+
 @code {
     // EventList takes a list of event objects as parameter to be displayed
     [Parameter]
-    public List<User> Users { get; set; } = [];
+    public List<User> Users { get; set; } = new List<User>();
+
 
     // Callback that is called when the user clicks the Edit button for an event.
     // This callback takes the event ID as a parameter and can be used to handle
@@ -31,4 +60,45 @@
     [Parameter]
     public EventCallback<string> OnEdit { get; set; }
 
+    private string? userToDelete;
+
+    private async Task DeleteUser(string Id)
+    {
+        var response = await HttpClient.DeleteAsync($"/users/{Id}");
+
+        if(response.IsSuccessStatusCode)
+        {
+            //Removes the user from the list
+            Users = Users.Where(u => u.Id != Id).ToList();
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("Failed to delete user");
+        }
+    }
+
+    // private async Task ChangeRole(string Id, string newRole)
+    // {
+
+    //     var userToEdit = await HttpClient.GetFromJsonAsync<User>($"/users/{Id}");
+
+    //     userToEdit.Role = newRole;
+
+    //     var jsonBody = JsonSerializer.Serialize(userToEdit);
+    //     var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+    //     var response = await HttpClient.PatchAsync($"/users/{Id}", content);
+
+    //     if(response.IsSuccessStatusCode)
+    //     {
+    //         StateHasChanged();
+    //     }
+    //     else
+    //     {
+    //         Console.WriteLine("Failed to update role");
+    //     }
+    // }
 }
+
+

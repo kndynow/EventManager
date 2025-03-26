@@ -1,0 +1,41 @@
+﻿.container {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+}
+
+    .container tr {
+        padding: 12px;
+        border: 1px solid black;
+    }
+
+    .container th, .container td {
+        padding: 0.5rem;
+    }
+
+    .container th {
+        background-color: #718eae;
+    }
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column; /* Arrange elements vertically (text on top, buttons below) */
+    width: 150px; /* Set a fixed width to prevent jumping */
+    padding: 0.5rem; /* Add padding to keep the layout consistent */
+
+}
+    .center button {
+        margin: 2px;
+        width:150px;
+    }
+.changeRole{
+    height:37px;
+    background-color: lightblue;
+    border:none;
+    border-radius:10px;
+}
