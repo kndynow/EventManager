@@ -4,25 +4,25 @@
 
 <CascadingAuthenticationState>
 
-	<AuthorizeView>
-		<Authorized>
-			<AuthorizeView Context="auth" Roles="Admin">
+    <AuthorizeView>
+        <Authorized>
+            <AuthorizeView Context="auth" Roles="Admin">
 
-				<AdminNavBar></AdminNavBar>
+                <AdminNavBar></AdminNavBar>
 
-			</AuthorizeView>
+            </AuthorizeView>
 
-			<AuthorizeView Context="auth" Roles="User">
-				<UserNavBar></UserNavBar>
-			</AuthorizeView>
+            <AuthorizeView Context="auth" Roles="User">
+                <UserNavBar></UserNavBar>
+            </AuthorizeView>
 
-		</Authorized>
+        </Authorized>
 
-		<NotAuthorized>
-			<LoggedOutNavBar></LoggedOutNavBar>
-		</NotAuthorized>
+        <NotAuthorized>
+            <LoggedOutNavBar></LoggedOutNavBar>
+        </NotAuthorized>
 
-	</AuthorizeView>
+    </AuthorizeView>
 
 	<div class="page">
 		<main class="main">
