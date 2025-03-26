@@ -1,4 +1,4 @@
-﻿<table class="table">
+﻿<table class="container">
     <thead>
         <tr>
             <th>Username</th>
@@ -9,17 +9,20 @@
     <tbody>
         @foreach (var user in Users)
         {
-            <tr>
+            <tr class="bgc">
                 <td>@user.Username</td>
                 <td>@user.Role</td>
                 <td>@user.CreatedAt</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="(() => OnEdit.InvokeAsync(user.Id))">Edit</button>
+
+                <td class="">
+                    <button class="btn btn-danger" @onclick="(() => OnEdit.InvokeAsync(user.Id))">Delete user</button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+
 @code {
     // EventList takes a list of event objects as parameter to be displayed
     [Parameter]

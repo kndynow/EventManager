@@ -1,0 +1,64 @@
+﻿
+.event-container {
+    margin-top: 1rem;
+}
+
+    .event-container .row {
+        color: aliceblue;
+        margin-top: -5px;
+        margin-right: -5px;
+        margin-left: -5px;
+    }
+
+    .event-container .col-12 {
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+
+.card {
+    transition: none;
+    background-color: transparent;
+    border-radius: 0;
+    border: 1px solid #2d394b;
+    box-shadow: none;
+    transform: none;
+}
+
+    .card:hover {
+        transform: none;
+    }
+
+.list-group {
+    color: aliceblue;
+    background-color: transparent;
+}
+
+.list-group-item {
+    color: aliceblue;
+    background-color: transparent;
+}
+
+.container {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+}
+
+    .container tr {
+        padding: 12px;
+        border: 1px solid black;
+
+    }
+    .container th, .container td {
+        padding: 0.5rem;
+    }
+
+    .container th {
+        background-color:#718eae; 
+    }
+
+.bgc {
+    background-color: #718eae;
+}

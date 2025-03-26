@@ -15,12 +15,12 @@
 }
 
 .card {
-  transition: none;
-  background-color: transparent;
-  border-radius: 0;
-  border: 1px solid #2d394b;
-  box-shadow: none;
-  transform: none;
+    background-color: #718eae;
+    transition: none;
+    border-radius: 0;
+    border: 1px solid #2d394b;
+    box-shadow: none;
+    transform: none;
 }
 
 .card:hover {
