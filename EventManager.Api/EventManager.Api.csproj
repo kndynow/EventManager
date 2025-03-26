@@ -24,4 +24,8 @@
 		<ProjectReference Include="..\EventManager.Core\EventManager.Core.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Endpoints/Booking/Admin/" />
+	</ItemGroup>
+
 </Project>
