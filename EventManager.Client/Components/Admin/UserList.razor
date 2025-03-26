@@ -1,21 +1,33 @@
-﻿<table class="container">
+﻿@inject HttpClient HttpClient;
+
+<table class="container">
     <thead>
         <tr>
             <th>Username</th>
             <th>Role</th>
             <th>Created At</th>
+            <th>Delete user</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var user in Users)
         {
-            <tr class="bgc">
+            <tr>
                 <td>@user.Username</td>
                 <td>@user.Role</td>
                 <td>@user.CreatedAt</td>
 
-                <td class="">
-                    <button class="btn btn-danger" @onclick="(() => OnEdit.InvokeAsync(user.Id))">Delete user</button>
+                <td class="center">
+                    @if(@userToDelete == user.Id)
+                    {
+                        <span>Are you sure that you want to delete the user?</span><br />
+                        <button class="btn btn-success" @onclick="() => userToDelete=null"> No</button>
+                        <button class="btn btn-danger" @onclick="async () => await DeleteUser(user.Id)">Yes</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-danger" @onclick="() => userToDelete = user.Id">Delete user</button>
+                    }
                 </td>
             </tr>
         }
@@ -26,7 +38,8 @@
 @code {
     // EventList takes a list of event objects as parameter to be displayed
     [Parameter]
-    public List<User> Users { get; set; } = [];
+    public List<User> Users { get; set; } = new List<User>();
+
 
     // Callback that is called when the user clicks the Edit button for an event.
     // This callback takes the event ID as a parameter and can be used to handle
@@ -34,4 +47,23 @@
     [Parameter]
     public EventCallback<string> OnEdit { get; set; }
 
+    private string? userToDelete;
+
+    private async Task DeleteUser(string Id)
+    {
+        var response = await HttpClient.DeleteAsync($"/users/{Id}");
+
+        if(response.IsSuccessStatusCode)
+        {
+            //Removes the user from the list
+            Users = Users.Where(u => u.Id != Id).ToList();
+            StateHasChanged();
+        }
+        else
+        {
+            Console.WriteLine("Failed to delete user");
+        }
+    }
 }
+
+
