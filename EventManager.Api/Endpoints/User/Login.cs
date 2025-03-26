@@ -27,7 +27,7 @@ public class Login : IEndpoint
             return TypedResults.NotFound("Invalid username or password");
         }
 
-        var token = tokenService.GenerateToken(user.Username, user.Role);
+        var token = tokenService.GenerateToken(user.Id, user.Username, user.Role);
 
         return TypedResults.Ok(new { Token = token });
     }

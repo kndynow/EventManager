@@ -14,8 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages/User/" />
+    <Folder Include="Pages/Bookings/" />
     <Folder Include="wwwroot/images/" />
   </ItemGroup>
+
 
 </Project>

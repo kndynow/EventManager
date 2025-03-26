@@ -49,14 +49,15 @@ public class BookingRepository : IBookingRepository
     {
         var bookingFilter = GetBookingIdFilter(updatedBooking.Id);
         var updateBookings = Builders<Booking>
-            .Update.Set(b => b.BookedAmount, updatedBooking.BookedAmount)
-            .Set(b => b.IsActive, updatedBooking.IsActive);
+            .Update.Set(b => b.TicketCount, updatedBooking.TicketCount)
+            .Set(b => b.TotalPrice, updatedBooking.TotalPrice);
 
         await _bookings.UpdateOneAsync(bookingFilter, updateBookings);
     }
 
-    public Task DeleteAsync(string id)
+    public async Task DeleteAsync(string id)
     {
-        throw new NotImplementedException();
+        var bookingFilter = GetBookingIdFilter(id);
+        var result = await _bookings.DeleteOneAsync(bookingFilter);
     }
 }

@@ -1,0 +1,108 @@
+﻿@page "/bookings"
+@using Microsoft.AspNetCore.Authorization
+@using System.Net.Http.Json
+@inject HttpClient HttpClient
+@inject IAuthenticationService AuthService
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "User")]
+
+<h1>Bookings</h1>
+
+@if (bookings is null)
+{
+    <div class="text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else if (!bookings.Any())
+{
+    <p>You don't have any bookings right now.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Ticket Count</th>
+                <th>Total Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in bookings)
+            {
+                <tr>
+                    <td>@booking.EventName</td>
+                    <td>@booking.EventDate.ToShortDateString()</td>
+                    <td>@booking.TicketCount</td>
+                    <td>@booking.TotalPrice.ToString("N0")Kr</td>
+                    <td>
+                        <button class="btn btn-danger" @onclick="() => CancelBooking(booking.Id)">Cancel Booking</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Booking> bookings = [];
+    private string? userId;
+    private string? Message;
+    private string? MessageClass;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            userId = await AuthService.GetUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                Message = "Failed to fetch bookings. User ID not found.";
+                MessageClass = "alert alert-danger";
+                return;
+            }
+            bookings = await HttpClient.GetFromJsonAsync<List<Booking>>($"/users/{userId}/bookings/") ?? [];
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching bookings: {ex.Message}");
+            Message = "Could not fetch bookings. Please try again later.";
+            MessageClass = "alert alert-danger";
+            bookings = [];
+        }
+    }
+
+    private async Task CancelBooking(string bookingId)
+    {
+        try
+        {
+            userId = await AuthService.GetUserId();
+            var response = await HttpClient.DeleteAsync($"/users/{userId}/bookings/{bookingId}/cancel");
+            if (response.IsSuccessStatusCode)
+            {
+                // Update the bookings list
+                bookings = await HttpClient.GetFromJsonAsync<List<Booking>>($"/users/{userId}/bookings/") ?? [];
+                Message = "Booking cancelled successfully.";
+                MessageClass = "alert alert-success";
+            }
+            else
+            {
+                Message = "Could not cancel booking. Please try again later.";
+                MessageClass = "alert alert-danger";
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error cancelling booking: {ex.Message}");
+            Message = "Could not cancel booking. Please try again later.";
+            MessageClass = "alert alert-danger";
+        }
+    }
+
+}

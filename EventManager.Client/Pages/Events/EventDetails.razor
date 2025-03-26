@@ -1,15 +1,14 @@
 ﻿@page "/events/{Id}"
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
-
 @using EventManager.Client.Models
 @using EventManager.Client.Services
-@using System.Net.Http.Json
 @inject HttpClient HttpClient
+@inject IAuthenticationService AuthService
 @inject NavigationManager NavigationManager
 
 <div class="container">
-	@if (evt == null)
+	@if (evt is null)
 	{
 		<div class="text-center">
 			<div class="spinner-border" role="status">
@@ -51,18 +50,21 @@
 						<div class="card border-0">
 							<div class="card-body">
 								<h5 class="card-title">Book Tickets</h5>
-								<EditForm Model="evt" OnValidSubmit="HandleSubmit">
+								<EditForm Model="@booking" OnValidSubmit="HandleSubmit">
+									<DataAnnotationsValidator />
 
 									<div class="form-group">
 										<label for="quantity" class="form-label">Number of Tickets</label>
-										<input type="number" class="form-control" id="quantity" @bind="quantity" min="1"
-										max="8" required>
-
+										<InputNumber id="quantity" class="form-control"
+											@bind-Value="@booking.TicketCount" />
+										<ValidationMessage For="@(() => booking.TicketCount)" />
 									</div>
+
 									<div class="ticket-limit">Total tickets available: @evt.AvailableTickets</div>
 									<div class="total-price">
-										Total: <span class="price-number">@(evt.Price * quantity)</span> Kr
+										Total: <span class="price-number">@(evt.Price* booking.TicketCount)</span> Kr
 									</div>
+
 									<button type="submit" class="btn btn-primary">Book Now</button>
 
 									@if (!string.IsNullOrEmpty(Message))
@@ -93,19 +95,22 @@
 
 
 @code {
-    [Parameter]
-    public string Id { get; set; }
 
-    private Event evt;
-    private int quantity = 1;
-
+	[Parameter]
+	public string Id { get; set; }
+	private Event evt;
+	private string? userId;
+	private Booking booking = new();
 	private string? Message;
 	private string? MessageClass;
+
+	private decimal CalculateTotalPrice => evt?.Price * booking.TicketCount ?? 0;
 
 	protected override async Task OnInitializedAsync()
 	{
 		try
 		{
+			// Fetch the event
 			evt = await HttpClient.GetFromJsonAsync<Event>($"/events/{Id}");
 		}
 		catch (Exception ex)
@@ -119,37 +124,50 @@
 	{
 		try
 		{
-			if (evt.AvailableTickets >= quantity)
-			{
-				evt.AvailableTickets = evt.AvailableTickets - quantity;
-
-				var response = await HttpClient.PatchAsJsonAsync($"/events/{evt.Id}", evt);
-
-				if (response.IsSuccessStatusCode)
-				{
-					MessageClass = "booking-successful";
-					Message = $"Successful booking! Amount booked: {quantity}";
-
-				}
-				else
-				{			
-					MessageClass = "booking-unsuccsesful";
-					Message = $"Failed to purchase tickets {response.ReasonPhrase}";
-				}
-			}
-
-			else
+			// Check if there are enough tickets available
+			if (booking.TicketCount > evt.AvailableTickets)
 			{
 				MessageClass = "booking-unsuccsesful";
-				Message = "You cannot book more tickets than there are tickets available.";
+				Message = "Not enough tickets available.";
+				return;
 			}
-			StateHasChanged();
+			userId = await AuthService.GetUserId();
+
+			if (string.IsNullOrEmpty(userId))
+			{
+				MessageClass = "booking-unsuccsesful";
+				Message = "Failed to book tickets. User ID not found.";
+				return;
+			}
+			// Create a new booking
+			var response = await HttpClient.PostAsJsonAsync($"/users/{userId}/bookings", new
+			{
+				EventId = evt.Id,
+				TicketCount = booking.TicketCount,
+				TotalPrice = CalculateTotalPrice
+			});
+			// Check if the booking was successful
+			if (response.IsSuccessStatusCode)
+			{
+				// Update the event's available tickets
+				evt.AvailableTickets -= booking.TicketCount;
+				// Reset the booking amount
+				booking.TicketCount = 1;
+				MessageClass = "booking-successful";
+				Message = "Tickets booked successfully!";
+			}
+			else
+			{
+				Console.WriteLine($"Booking failed");
+				MessageClass = "booking-unsuccsesful";
+				Message = "Failed to book tickets. Please try again later.";
+			}
 		}
-		
 		catch (Exception ex)
 		{
-        Console.WriteLine($"Error updating tickets: {ex.Message}");
-        Message = "An error occurred while processing your request.";
+			MessageClass = "booking-unsuccsesful";
+			Message = "Failed to book tickets. Please try again later.";
+			Console.WriteLine($"Catch-block: Error booking tickets: {ex.Message}");
 		}
 	}
 }

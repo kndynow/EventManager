@@ -10,7 +10,7 @@ namespace EventManager.Api.Jwt
     {
         public interface ITokenService
         {
-            public string GenerateToken(string username, string role);
+            public string GenerateToken(string userId, string username, string role);
         }
 
         private readonly IConfiguration _config;
@@ -20,7 +20,7 @@ namespace EventManager.Api.Jwt
             _config = config;
         }
 
-        public string GenerateToken(string username, string role)
+        public string GenerateToken(string userId, string username, string role)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -30,7 +30,12 @@ namespace EventManager.Api.Jwt
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(
-                    new[] { new Claim(ClaimTypes.Name, username), new Claim(ClaimTypes.Role, role) }
+                    new[]
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, userId),
+                        new Claim(ClaimTypes.Name, username),
+                        new Claim(ClaimTypes.Role, role),
+                    }
                 ),
                 Expires = DateTime.UtcNow.AddHours(1),
                 Issuer = _config["JwtSettings:Issuer"],

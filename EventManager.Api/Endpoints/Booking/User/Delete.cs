@@ -7,7 +7,7 @@ namespace EventManager.Api.Endpoints;
 public class CancelBooking : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder app) =>
-        app.MapPatch("/users/{userId}/bookings/{bookingId}/cancel", Handle)
+        app.MapDelete("/users/{userId}/bookings/{bookingId}/cancel", Handle)
             .WithSummary("Cancel booking");
 
     private static async Task<IResult> Handle(

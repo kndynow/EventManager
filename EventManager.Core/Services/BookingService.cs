@@ -21,27 +21,23 @@ public class BookingService : IBookingService
         _eventService = eventService;
     }
 
-    // Creates a new booking
     public async Task<Booking> CreateBookingAsync(Booking newBooking)
     {
-        // Get specified event
         var evt = await _eventService.GetEventByIdAsync(newBooking.EventId);
-        // If event is not found, throw an exception
         if (evt is null)
         {
             throw new KeyNotFoundException("Event not found.");
         }
-        // If there are not enough tickets available, throw an exception
-        if (evt.AvailableTickets < newBooking.BookedAmount)
+        if (evt.AvailableTickets < newBooking.TicketCount)
         {
             throw new KeyNotFoundException("Not enough tickets available.");
         }
-        // Update booking with event name and date
+
+        newBooking.TotalPrice = evt.Price * newBooking.TicketCount;
         newBooking.EventName = evt.Name;
         newBooking.EventDate = evt.StartTime;
 
-        // Update event with new available tickets
-        evt.AvailableTickets -= newBooking.BookedAmount;
+        evt.AvailableTickets -= newBooking.TicketCount;
         await _eventService.UpdateEventPartialAsync(evt.Id, evt);
 
         await _bookingRepository.CreateAsync(newBooking);
@@ -58,27 +54,22 @@ public class BookingService : IBookingService
     // Cancels a booking
     public async Task<Booking> CancelBookingAsync(string bookingId)
     {
-        // Get specified booking and check if it exists
         var booking = await _bookingRepository.GetByIdAsync(bookingId);
-        if (booking is null || !booking.IsActive)
+        if (booking is null)
         {
-            throw new KeyNotFoundException("Booking not found or cancelled.");
+            throw new KeyNotFoundException("Booking not found");
         }
 
-        // Get event specified in booking and check if it exists
         var evt = await _eventService.GetEventByIdAsync(booking.EventId);
         if (evt is null)
         {
             throw new KeyNotFoundException("Event not found.");
         }
 
-        // Update event with new available tickets
-        evt.AvailableTickets += booking.BookedAmount;
+        evt.AvailableTickets += booking.TicketCount;
         await _eventService.UpdateEventAsync(evt.Id, evt);
 
-        // Update booking set booking to inactive
-        booking.IsActive = false;
-        await _bookingRepository.UpdatePartialAsync(booking);
+        await _bookingRepository.DeleteAsync(booking.Id);
         return booking;
     }
 }

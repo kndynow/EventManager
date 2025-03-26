@@ -1,6 +1,6 @@
-﻿using Blazored.LocalStorage;
+﻿using System.Security.Claims;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Security.Claims;
 
 namespace EventManager.Client.Services
 {
@@ -33,14 +33,16 @@ namespace EventManager.Client.Services
 
             return new AuthenticationState(new ClaimsPrincipal(identity));
         }
-        //Saves the provided token in localstorage. 
-        //Notifies authentication system that user's authenticationstate has changed. 
+
+        //Saves the provided token in localstorage.
+        //Notifies authentication system that user's authenticationstate has changed.
         public async Task Login(string token)
         {
             await _localStorage.RemoveItemAsync("authToken");
             await _localStorage.SetItemAsync("authToken", token);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
+
         //Removes user token from local storage
         //Notifies authentication system that user isn't authenticated anymore
         public async Task Logout()
@@ -54,8 +56,12 @@ namespace EventManager.Client.Services
         private IEnumerable<Claim> ParseClaimsFromJwt(string token)
         {
             var payload = token.Split('.')[1];
-            var jsonBytes = Convert.FromBase64String(payload + new string('=', (4 - payload.Length % 4) % 4));
-            var keyValuePairs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
+            var jsonBytes = Convert.FromBase64String(
+                payload + new string('=', (4 - payload.Length % 4) % 4)
+            );
+            var keyValuePairs = System.Text.Json.JsonSerializer.Deserialize<
+                Dictionary<string, object>
+            >(jsonBytes);
             return keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
         }
     }

@@ -12,7 +12,7 @@ public class Booking
     public string EventId { get; set; }
     public string EventName { get; set; }
     public DateTime EventDate { get; set; }
-    public int BookedAmount { get; set; }
-    public bool IsActive { get; set; } = true;
+    public int TicketCount { get; set; }
+    public decimal TotalPrice { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

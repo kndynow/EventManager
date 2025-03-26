@@ -33,7 +33,7 @@ public class UserService : IUserService
     {
         var user = await _userRepository.GetByUsernameAsync(username);
 
-        if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        if (user is null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
         {
             return null; //Invalid username or password
         }
@@ -57,7 +57,7 @@ public class UserService : IUserService
         //Returns null if username already exists in database
         var existingUser = await _userRepository.GetByUsernameAsync(username);
 
-        if (existingUser != null)
+        if (existingUser is not null)
         {
             return null;
         }
@@ -77,7 +77,7 @@ public class UserService : IUserService
     {
         var user = await _userRepository.GetByIdAsync(id);
         //If event is not found, throw an exception
-        if (user == null)
+        if (user is null)
         {
             throw new KeyNotFoundException("User not found.");
         }
@@ -88,7 +88,7 @@ public class UserService : IUserService
     public async Task<User> UpdateUserPartialAsync(string id, User updatedUser)
     {
         var user = await _userRepository.GetByIdAsync(id);
-        if (user == null)
+        if (user is null)
         {
             throw new KeyNotFoundException("User not found.");
         }
@@ -102,7 +102,7 @@ public class UserService : IUserService
         var user = await GetUserByIdAsync(id);
         if (user is null)
         {
-            throw new KeyNotFoundException("Event not found.");
+            throw new KeyNotFoundException("User not found.");
         }
 
         await _userRepository.DeleteAsync(id);
