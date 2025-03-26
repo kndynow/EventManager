@@ -2,34 +2,73 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="form-group mb-3">
-        <label for="name">Name</label>
-        <InputText id="name" class="form-control" @bind-Value="Event.Name" placeholder="Enter event name" />
-        <ValidationMessage For="@(() => Event.Name)" />
-    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="name">Name</label>
+                    <InputText id="name" class="form-control" @bind-Value="Event.Name" placeholder="Enter event name" />
+                    <ValidationMessage For="@(() => Event.Name)" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="shortdesc">Short Description</label>
+                    <InputText id="shortdesc" class="form-control" @bind-Value="Event.ShortDescription"
+                        placeholder="Enter description" />
+                    <ValidationMessage For="@(() => Event.ShortDescription)" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="desc">Description</label>
+                    <InputTextArea id="desc" class="form-control" @bind-Value="Event.Description"
+                        placeholder="Enter description" />
+                    <ValidationMessage For="@(() => Event.Description)" />
+                </div>
 
-    <div class="form-group mb-3">
-        <label for="desc">Description</label>
-        <InputTextArea id="desc" class="form-control" @bind-Value="Event.Description" placeholder="Enter description" />
-        <ValidationMessage For="@(() => Event.Description)" />
-    </div>
+            </div>
 
-    <div class="form-group mb-3">
-        <label for="timestart">Event Start</label>
-        <InputDate id="timestart" class="form-control" @bind-Value="Event.StartTime" />
-        <ValidationMessage For="@(() => Event.StartTime)" />
-    </div>
-
-    <div class="form-group mb-3">
-        <label for="timeend">Event End</label>
-        <InputDate id="timeend" class="form-control" @bind-Value="Event.EndTime" />
-        <ValidationMessage For="@(() => Event.EndTime)" />
-    </div>
-
-    <div class="form-group mb-3">
-        <label for="attendees">Maximum Attendees</label>
-        <InputNumber id="attendees" class="form-control" @bind-Value="Event.MaxAttendees" />
-        <ValidationMessage For="@(() => Event.MaxAttendees)" />
+            <div class="col-md-6">
+                <div>
+                    <label for="type">Event Type</label>
+                    <InputSelect id="type" class="form-control" @bind-Value="Event.Type">
+                        <option value="Concert">Concert</option>
+                        <option value="Festival">Festival</option>
+                        <option value="Theatre">Theatre</option>
+                        <option value="Sport">Sport</option>
+                        <option value="Other">Other</option>
+                    </InputSelect>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="timestart">Event Start</label>
+                    <InputDate id="timestart" class="form-control" @bind-Value="Event.StartTime" />
+                    <ValidationMessage For="@(() => Event.StartTime)" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="timeend">Event End</label>
+                    <InputDate id="timeend" class="form-control" @bind-Value="Event.EndTime" />
+                    <ValidationMessage For="@(() => Event.EndTime)" />
+                </div>
+                <div>
+                    <label for="location">Location</label>
+                    <InputText id="location" class="form-control" @bind-Value="Event.Location"
+                        placeholder="Enter location" />
+                    <ValidationMessage For="@(() => Event.Location)" />
+                </div>
+                <div>
+                    <label for="price">Price</label>
+                    <InputNumber id="price" class="form-control" @bind-Value="Event.Price" />
+                    <ValidationMessage For="@(() => Event.Price)" />
+                </div>
+                <div>
+                    <label for="tickets">Available Tickets</label>
+                    <InputNumber id="tickets" class="form-control" @bind-Value="Event.AvailableTickets" />
+                    <ValidationMessage For="@(() => Event.AvailableTickets)" />
+                </div>
+                <div class="form-group mb-3">
+                    <label for="attendees">Maximum Attendees</label>
+                    <InputNumber id="attendees" class="form-control" @bind-Value="Event.MaxAttendees" />
+                    <ValidationMessage For="@(() => Event.MaxAttendees)" />
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="button-group mt-4">
@@ -50,27 +89,28 @@
     </div>
 </EditForm>
 
+<style>
+    #desc {
+        height: 250px;
+    }
+</style>
+
 @code {
 
     [Parameter, EditorRequired]
     public Event Event { get; set; }
 
-
     [Parameter]
     public bool IsNew { get; set; } = true;
-
 
     [Parameter]
     public EventCallback<Event> OnSubmit { get; set; }
 
-
     [Parameter]
     public EventCallback OnCancel { get; set; }
 
-
     [Parameter]
     public EventCallback<string> OnDelete { get; set; }
-
 
     private async Task HandleSubmit()
     {

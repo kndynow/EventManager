@@ -6,6 +6,17 @@
     <div class="card-footer">@FooterTemplate</div>
 </div>
 
+<style>
+    .card {
+        color: aliceblue;
+        background-color: transparent;
+        border: 1px solid #2d394b;
+        border-radius: 0;
+        box-shadow: none;
+        transition: transform 0.3s;
+    }
+</style>
+
 @code {
     [Parameter]
     public RenderFragment HeaderTemplate { get; set; }

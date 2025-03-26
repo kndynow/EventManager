@@ -1,4 +1,5 @@
-﻿@page "/eventdashboard"
+﻿@page "/admindashboard"
+@page "/eventdashboard"
 @using Microsoft.AspNetCore.Authorization
 @using System.Security.Claims;
 @attribute [Authorize(Roles = "Admin")]
@@ -12,25 +13,26 @@
 
 @if (!showForm)
 {
-    <EventList Events="events" OnEdit="HandleEdit"/>
     <button class="btn btn-primary" @onclick="HandleCreate">Publish New Event</button>
+    <EventList Events="events" OnEdit="HandleEdit"/>
+    
 }
 else
 {
-    <GenericCard TItem="Event">
-        <HeaderTemplate>
-             <h3>@(isNew ? "Create New Event" : "Edit Event")</h3>
-        </HeaderTemplate>
-        <ChildContent>
-            <EventForm 
-             Event="_event"
-            IsNew="isNew"
-             OnSubmit="
-             HandleSubmit"
+        <GenericForm TItem="Event">
+            <HeaderTemplate>
+                 <h3>@(isNew ? "Create New Event" : "Edit Event")</h3>
+            </HeaderTemplate>
+            <ChildContent>
+                <EventForm 
+                 Event="_event"
+                IsNew="isNew"
+                 OnSubmit="
+                 HandleSubmit"
              OnCancel="HandleCancel"
               OnDelete="HandleDelete"/>
         </ChildContent>
-    </GenericCard>
+    </GenericForm>
 }
 
 @code {
@@ -91,7 +93,6 @@ else
     }
 
     //Update Event
-    //TODO: create put endpoint and patch endpoint
     private async Task HandleEdit(string id)
     {
         try
@@ -164,24 +165,3 @@ else
         
     }
 }
-
-
-
-@* private List<Event> dummyEvents = new List<Event>{
-        new Event {
-            Id=1, 
-            Name="Putte Bajsar i Parken 2025",
-            Description="Putte Bajsar i Parken 2025: En unik festival där besökare kan uppleva den ultimata blandningen av musik, natur och... oväntad flatulens! Kom och se Putte göra det han gör bäst, mitt i vår vackra park. Glöm inte att ta med stövlar och näsklämma!",
-            Start = DateTime.Parse("2025-06-17"),
-            End=DateTime.Parse("2025-06-19"),
-            MaxAttendees=500
-        },
-        new Event {
-            Id=2, 
-            Name="Kalle Anka's Underbara Byxlösa Äventyr 2026",
-            Description="Kalle Anka's Underbara Byxlösa Äventyr 2026: En hisnande upplevelse där Kalle Anka tappar sina byxor och måste navigera genom Ankeborg helt exponerad! Följ med på en skrattfylld resa full av pinsamma situationer, kreativa gömställen och oväntade hjältar. Glöm inte att ta med en extra uppsättning byxor - man vet aldrig när Kalle kan behöva dem!",
-            Start = DateTime.Parse("2026-07-01"),
-            End=DateTime.Parse("2026-07-03"),
-            MaxAttendees=1000
-        }
-    }; *@

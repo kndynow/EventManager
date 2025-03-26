@@ -1,0 +1,78 @@
+﻿<EditForm Model="User" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group mb-3">
+        <label for="username">Name</label>
+        <InputText id="username" class="form-control" @bind-Value="User.Username" placeholder="Enter Username" />
+        <ValidationMessage For="@(() => User.Username)" />
+    </div>
+
+    @* <div class="form-group mb-3">
+        <label for="email">Email</label>
+        <InputTextArea id="email" class="form-control" @bind-Value="User.Email" placeholder="Enter Email" />
+        <ValidationMessage For="@(() => User.Email)" />
+    </div> *@
+
+    <div class="form-group mb-3">
+        <label for="role">Role</label>
+        <InputNumber id="role" class="form-control" @bind-Value="User.Role" />
+        <ValidationMessage For="@(() => User.Role)" />
+    </div>
+
+    <div class="button-group mt-4">
+        <button type="submit" class="btn btn-primary me-2">
+            @(IsNew ? "Publish Event" : "Save Changes")
+        </button>
+
+        <button type="button" class="btn btn-secondary me-2" @onclick="OnCancel">
+            Cancel
+        </button>
+
+        @if (!IsNew)
+        {
+            <button type="button" class="btn btn-danger" @onclick="HandleDelete">
+                Delete User
+            </button>
+        }
+    </div>
+</EditForm>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public User User { get; set; }
+
+
+    [Parameter]
+    public bool IsNew { get; set; } = true;
+
+
+    [Parameter]
+    public EventCallback<User> OnSubmit { get; set; }
+
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+
+    [Parameter]
+    public EventCallback<string> OnDelete { get; set; }
+
+
+    private async Task HandleSubmit()
+    {
+        if (User != null)
+        {
+            await OnSubmit.InvokeAsync(User);
+        }
+    }
+
+    private async Task HandleDelete()
+    {
+        if (User != null && !IsNew)
+        {
+            await OnDelete.InvokeAsync(User.Id);
+        }
+    }
+}

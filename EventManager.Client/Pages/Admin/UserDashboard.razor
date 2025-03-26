@@ -1,0 +1,143 @@
+﻿@page "/userdashboard"
+@using EventManager.Client.Components.Admin
+@using EventManager.Client.Models
+@using System.Net.Http.Json
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+
+<h1>Manage Users</h1>
+
+@if (!showForm)
+{
+    <UserList Users="users" OnEdit="HandleEdit"/>
+    
+}
+else
+{
+        <GenericForm TItem="User">
+            <HeaderTemplate>
+                 <h3>@(isNew ? "Create New User" : "Edit User")</h3>
+            </HeaderTemplate>
+            <ChildContent>
+                <UserForm 
+                 User="_user"
+                IsNew="isNew"
+                 OnSubmit="
+                 HandleSubmit"
+             OnCancel="HandleCancel"
+              OnDelete="HandleDelete"/>
+        </ChildContent>
+    </GenericForm>
+}
+
+@code {
+    private bool isNew = true;
+    private bool showForm = false;
+    private List<User> users = [];
+    private User _user = new()
+    {
+        Username = "Username",
+        Role = "Role",
+        CreatedAt = DateTime.UtcNow,
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            users = await HttpClient.GetFromJsonAsync<List<User>>("/users") ?? [];
+                
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching events: {ex.Message}");
+            users = [];
+        }
+    }
+    
+    //Create Event
+    private async Task HandleCreate()
+    {
+        _user = new()
+        {
+            Username = "Username",
+            Role = "Role",
+            CreatedAt = DateTime.UtcNow
+        };
+        isNew = true;
+        showForm = true;
+    }
+
+    //Update Event
+    private async Task HandleEdit(string id)
+    {
+        try
+        {
+            var userToEdit = await HttpClient.GetFromJsonAsync<User>($"/users/{id}");
+            if (userToEdit != null)
+            {
+                _user = userToEdit;
+                isNew = false;
+                showForm = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error editing event: {ex.Message}");
+        }
+    }
+
+    // Submit Event
+    private async Task HandleSubmit()
+    {
+        if (isNew)
+        {
+            try
+            {
+                await HttpClient.PostAsJsonAsync("/users", _user);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating user: {ex.Message}");
+            }
+        }
+        else
+        {
+            try
+            {
+                await HttpClient.PatchAsJsonAsync($"/users/{_user.Id}", _user);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating user: {ex.Message}");
+            }
+        }
+        users = await HttpClient.GetFromJsonAsync<List<User>>("/users") ?? [];
+        showForm = false;
+    }
+
+    // Cancel create/update
+    private void HandleCancel()
+    {
+        showForm = false;
+    }
+
+    // Delete Event
+    private async Task HandleDelete(string id)
+    {
+        try
+        {
+            var response = await HttpClient.DeleteAsync($"/users/{_user.Id}");
+            if (response.IsSuccessStatusCode)
+            {
+                users = await HttpClient.GetFromJsonAsync<List<User>>("/users") ?? [];
+                showForm = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting event: {ex.Message}");
+        }
+        
+    }
+}
