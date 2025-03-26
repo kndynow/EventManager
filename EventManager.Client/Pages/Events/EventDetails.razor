@@ -1,4 +1,7 @@
 ﻿@page "/events/{Id}"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
 @using EventManager.Client.Models
 @using EventManager.Client.Services
 @using System.Net.Http.Json
