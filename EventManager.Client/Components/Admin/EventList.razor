@@ -1,33 +1,48 @@
-﻿<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Event Start</th>
-            <th>Event End</th>
-            <th>Maximum Attendees</th>
-        </tr>
-    </thead>
-    <tbody>
+﻿<div class="event-container">
+    <div class="row g-2">
         @foreach (var evnt in Events)
         {
-            <tr>
-                <td>@evnt.Name</td>
-                <td>@evnt.Description</td>
-                <td>@evnt.Start</td>
-                <td>@evnt.End</td>
-                <td>@evnt.MaxAttendees</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="(() => OnEdit.InvokeAsync(evnt.Id))">Edit</button>
-                </td>
-            </tr>
+            <div class="col-12 mb-2">
+                <div class="card h-100">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="card-body">
+                                <h5 class="card-title">@evnt.Name</h5>
+                                <p class="card-text">@evnt.ShortDescription</p>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><strong>Date:</strong> @evnt.StartTime.ToString("yyyy-MM-dd")
+                                </li>
+                                <li class="list-group-item"><strong>Time:</strong> @evnt.StartTime.ToString("HH:mm") -
+                                    @evnt.EndTime.ToString("HH:mm")</li>
+                                <li class="list-group-item"><strong>Location:</strong> @evnt.Location</li>
+                                <li class="list-group-item"><strong>Tickets Available:</strong> @evnt.AvailableTickets</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-center">
+                            <div class="card-body">
+                                <button class="btn btn-primary w-100" @onclick="(() => OnEdit.InvokeAsync(evnt.Id))">Edit
+                                    Event</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+</div>
+
 @code {
+    // EventList takes a list of event objects as parameter to be displayed
     [Parameter]
-    public List<Event> Events { get; set; } = new List<Event>();
+    public List<Event> Events { get; set; } = [];
+
+    // Callback that is called when the user clicks the Edit button for an event.
+    // This callback takes the event ID as a parameter and can be used to handle
+    // editing of the event in the parent component.
     [Parameter]
-    public EventCallback<int> OnEdit { get; set; }
+    public EventCallback<string> OnEdit { get; set; }
 
 }

@@ -7,6 +7,7 @@ Event Manager is a web application designed to simplify event management and tic
 ### Key Features
 
 - **For Users:**
+
   - Browse and search for public events
   - Purchase tickets for desired events
   - Manage and track purchased tickets

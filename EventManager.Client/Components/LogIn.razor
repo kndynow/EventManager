@@ -3,12 +3,13 @@
 @inject HttpClient httpClient;
 @inject NavigationManager Navigation
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
+@inject CustomAuthenticationStateProvider AuthStateProvider;
 
 <EditForm Model="@LoginViewModel" OnValidSubmit="HandleLogin">
 	<div class="container">
 		<DataAnnotationsValidator />
 
-		<h1>Login</h1>
+		<h1 class="text-color">Login</h1>
 		<div class="form-group">
 			<label for="UserName">Username:</label>
 			<InputText class="input" id="UserName" @bind-Value="LoginViewModel.UserName" />
@@ -17,30 +18,29 @@
 
 		<div class="form-group">
 			<label for="password">Password:</label>
-			<InputText class="input" id="password" type="password" @bind-Value="LoginViewModel.Password"/>
+			<InputText class="input" id="password" type="password" @bind-Value="LoginViewModel.Password" />
 			<ValidationMessage For="@(() => LoginViewModel.Password)" />
 		</div>
 
-		<button type="submit" class="btn login-btn">Log In</button>
-
 		@if (!string.IsNullOrEmpty(Message))
 		{
-			<p>@Message</p>
+			<div class="@MessageClass">@Message</div>
 		}
 
+		<button type="submit" class="btn">Log In</button>
+
 		<div class="form-group sign-up-group">
-			<p>Don't have an account?</p>
-			<button type="button" class="btn signup-btn" @onclick="GoToSignUp">Sign up</button>
+			<p class="text-color">Don't have an account? <NavLink href="/signup">Sign up here</NavLink>
+			</p>
 		</div>
 	</div>
-
 </EditForm>
-
-
 @code {
 	[SupplyParameterFromForm]
 	private LoginViewModel LoginViewModel { get; set; } = new LoginViewModel();
+
 	private string? Message;
+	private string MessageClass;
 
 	private async Task HandleLogin()
 	{
@@ -53,22 +53,19 @@
 		if (response.IsSuccessStatusCode)
 		{
 			var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
-			if(result != null)
-			{
-				await localStorage.SetItemAsync("authToken", result.Token);
 
-				Message = "Login successful!";
-				Navigation.NavigateTo("/"); // Redirect after login
+			if (result != null)
+			{
+				await AuthStateProvider.Login(result.Token); // Use AuthStateProvider to store JWT and update authentication state
+				StateHasChanged();
+				Navigation.NavigateTo("/");
+
 			}
 		}
 		else
 		{
+			MessageClass = "unsuccessful-login";
 			Message = "Invalid username or password.";
 		}
-	}
-
-	public void GoToSignUp()
-	{
-		//Navigate to sign-up page
 	}
 }

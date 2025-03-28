@@ -1,6 +1,4 @@
-using EventManager.Core.Services;
-
-namespace EventManager.Api.Endpoints.User;
+namespace EventManager.Api.Endpoints;
 
 public class Register : IEndpoint
 {
@@ -18,7 +16,7 @@ public class Register : IEndpoint
     {
         var result = await userService.Register(request.Username, request.Password);
 
-        if (result == null)
+        if (result is null)
         {
             return TypedResults.BadRequest(
                 "Invalid username and password or the username already exists."

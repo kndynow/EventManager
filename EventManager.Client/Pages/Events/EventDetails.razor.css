@@ -1,0 +1,146 @@
+.container {
+  padding-top: 0.5rem;
+  padding-bottom: 2rem;
+  padding-left: 8rem !important;
+  padding-right: 8rem !important;
+}
+.back-button {
+  margin-top: 1rem;
+}
+.card {
+  border: none;
+  box-shadow: none;
+  transition: none;
+  transform: none !important;
+  background-color: transparent;
+}
+.card:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+.card-body {
+  padding: 1.5rem;
+  transition: none;
+  color: white;
+}
+.card-title {
+  color: white;
+  font-size: 2rem;
+}
+.image-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: none;
+  border-radius: 10px;
+}
+.btn {
+  border-radius: 0;
+  transition: none;
+}
+.btn:hover {
+  transform: none;
+}
+.btn-outline-secondary {
+  border: none;
+  color: white;
+  background: transparent;
+  padding: 0.5rem 1rem;
+  transition: opacity 0.3s ease;
+}
+.btn-outline-secondary:hover {
+  background: transparent;
+  color: white;
+  opacity: 0.8;
+}
+.btn-outline-secondary i {
+  margin-right: 0.5rem;
+  transition: transform 0.3s ease;
+}
+.btn-outline-secondary:hover i {
+  transform: translateX(-3px);
+}
+.list-unstyled {
+  margin-bottom: 0;
+}
+.list-unstyled li {
+  color: white;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+.list-unstyled li strong {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+}
+.card-text {
+  font-size: 1rem;
+  color: white;
+}
+h5.card-title {
+  font-size: 1.3rem;
+  color: white;
+}
+.total-price {
+  font-size: 1.3rem;
+  color: white;
+  margin-bottom: 0.8rem;
+}
+.total-price .price-number {
+  color: #b141a9;
+  font-weight: bold;
+}
+.form-control {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+.form-control:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  box-shadow: none;
+}
+.form-label {
+  color: white;
+  font-size: 1rem;
+}
+.form-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.3rem;
+}
+.form-group label {
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+.form-group input {
+  width: 100px;
+}
+.ticket-limit {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.8rem;
+}
+.booking-successful {
+    color: #00FF40;
+}
+.booking-unsuccsesful {
+    color: #fd5c63;
+}
+@media (max-width: 768px) {
+    .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
