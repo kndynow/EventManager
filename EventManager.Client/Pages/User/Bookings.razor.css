@@ -1,0 +1,20 @@
+﻿.container {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 18px;
+    text-align: left;
+}
+
+    .container tr {
+        padding: 12px;
+        border: 1px solid black;
+    }
+
+    .container th, .container td {
+        padding: 0.5rem;
+    }
+
+    .container th {
+        background-color: #718eae;
+    }

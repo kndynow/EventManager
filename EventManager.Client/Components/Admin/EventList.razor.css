@@ -1,0 +1,39 @@
+.event-container {
+  margin-top: 1rem;
+}
+
+.event-container .row {
+  color: aliceblue;
+  margin-top: -5px;
+  margin-right: -5px;
+  margin-left: -5px;
+}
+
+.event-container .col-12 {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.card {
+    background-color: #718eae;
+    transition: none;
+    border-radius: 0;
+    border: 1px solid #2d394b;
+    box-shadow: none;
+    transform: none;
+}
+
+.card:hover {
+  transform: none;
+}
+
+.list-group {
+  color: aliceblue;
+  background-color: transparent;
+}
+
+.list-group-item {
+  color: aliceblue;
+  border: none;
+  background-color: transparent;
+}

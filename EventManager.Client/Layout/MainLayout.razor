@@ -1,16 +1,38 @@
-﻿@inherits LayoutComponentBase
+﻿@using EventManager.Client.Components.NavBars;
+@using Microsoft.AspNetCore.Components.Authorization;
+@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="nav">
-        <NavMenu />
+<CascadingAuthenticationState>
+
+    <AuthorizeView>
+        <Authorized>
+            <AuthorizeView Context="auth" Roles="Admin">
+
+                <AdminNavBar></AdminNavBar>
+
+            </AuthorizeView>
+
+            <AuthorizeView Context="auth" Roles="User">
+                <UserNavBar></UserNavBar>
+            </AuthorizeView>
+
+        </Authorized>
+
+        <NotAuthorized>
+            <LoggedOutNavBar></LoggedOutNavBar>
+        </NotAuthorized>
+
+    </AuthorizeView>
+
+    <div class="page">
+        <main class="main">
+            <div class="container">
+                @Body
+            </div>
+        </main>
     </div>
 
-    <main>
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+</CascadingAuthenticationState>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.

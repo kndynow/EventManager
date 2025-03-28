@@ -1,0 +1,59 @@
+﻿@inject CustomAuthenticationStateProvider AuthStateProvider;
+@inject NavigationManager Navigation
+
+<header class="top-row">
+	<div class="nav-menu">
+		<div class="nav-item">
+			<h3 class="welcome">Welcome, @userName!</h3>
+		</div>
+
+		<div class="nav-item">
+			<NavLink href="" Match="NavLinkMatch.All">
+				<span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
+			</NavLink>
+		</div>
+
+		<div class="nav-item">
+			<NavLink href="/admindashboard">
+				<span class="bi bi-gear-fill" aria-hidden="true"></span> Manage events
+			</NavLink>
+		</div>
+
+		<div class="nav-item">
+			<NavLink href="/userdashboard">
+				<span class="bi bi-gear-fill" aria-hidden="true"></span> Manage users
+			</NavLink>
+		</div>
+
+		<div class="nav-item">
+			<NavLink href="/">
+				<span class="bi bi-gear-fill" aria-hidden="true" @onclick="Logout">
+					Logout
+				</span>
+			</NavLink>
+		</div>
+	</div>
+</header>
+
+@code {
+	private string? userName;
+
+	protected override async Task OnInitializedAsync()
+	{
+		var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+		var user = authState.User;
+
+		if (user.Identity?.IsAuthenticated == true)
+		{
+			userName = user.FindFirst(c => c.Type == "unique_name")?.Value;
+		}
+	}
+}
+
+@code {
+	private async Task Logout()
+	{
+		await AuthStateProvider.Logout();
+		StateHasChanged();
+	}
+}

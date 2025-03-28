@@ -20,5 +20,6 @@ namespace EventManager.Core
         //Exposing collections to other classes
         public IMongoCollection<Event> Events => _database.GetCollection<Event>("Events");
         public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
+        public IMongoCollection<Booking> Bookings => _database.GetCollection<Booking>("Bookings");
     }
 }

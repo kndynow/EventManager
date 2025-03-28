@@ -1,0 +1,27 @@
+﻿.container {
+    max-width: 450px;
+    min-height: 200px;
+    padding: 20px;
+    background: hsl(218deg 50% 91%);
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items:center;
+    gap: 15px;
+}
+.imgBackground {
+    border:1px solid black;
+    border-radius:500px;
+}
+
+.notAuhtorizedMessage {
+    margin-top: 1rem;
+    font-weight: bold;
+    color: #343231;
+}
+.logIn{
+    border:2px solid black;
+    background-color:red;
+}

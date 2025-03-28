@@ -1,7 +1,6 @@
-using EventManager.Core.Services;
 using static EventManager.Api.Jwt.TokenService;
 
-namespace EventManager.Api.Endpoints.User;
+namespace EventManager.Api.Endpoints;
 
 public class Login : IEndpoint
 {
@@ -14,8 +13,6 @@ public class Login : IEndpoint
     // Models
     public record Request(string Username, string Password);
 
-    public record Response(string Username, string Role);
-
     // Logic
     private static async Task<IResult> Handle(
         Request request,
@@ -25,13 +22,13 @@ public class Login : IEndpoint
     {
         var user = await userService.Login(request.Username, request.Password);
 
-        if (user == null)
+        if (user is null)
         {
             return TypedResults.NotFound("Invalid username or password");
         }
 
-        var token = tokenService.GenerateToken(user.Username, user.Role);
+        var token = tokenService.GenerateToken(user.Id, user.Username, user.Role);
 
-        return TypedResults.Ok(new {Token = token});
+        return TypedResults.Ok(new { Token = token });
     }
 }

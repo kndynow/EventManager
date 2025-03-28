@@ -1,0 +1,91 @@
+﻿@page "/events"
+@using System.Net.Http.Json
+@using EventManager.Client.Models
+@using EventManager.Client.Services
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+
+<div class="container">
+	<div class="back-button mb-4">
+		<a href="/" class="btn btn-outline-secondary">
+			<i class="bi bi-arrow-left"></i> Back to Home
+		</a>
+	</div>
+	<div class="row g-4">
+		@if (events == null)
+		{
+			<div class="col-12 text-center">
+				<div class="spinner-border" role="status">
+					<span class="visually-hidden">Loading...</span>
+				</div>
+			</div>
+		}
+		else
+		{
+			@foreach (var evt in events)
+			{
+				<div class="col-md-4">
+					<div class="card h-100 border-0">
+						<div class="card-body p-0">
+							<div class="image-container">
+								<img src="@evt.ImageUrl" class="img-fluid" alt="@evt.Name">
+							</div>
+						</div>
+						<div class="card-body">
+							<h5 class="card-title">@evt.Name</h5>
+							<p class="card-text">@evt.ShortDescription</p>
+							<div class="event-info">
+								<div class="info-item">
+									<i class="bi bi-calendar"></i>
+									<span>@evt.StartTime.ToString("MMMM d, yyyy")</span>
+								</div>
+								<div class="info-item">
+									<i class="bi bi-clock"></i>
+									<span>@evt.StartTime.ToString("HH:mm")</span>
+								</div>
+								<div class="info-item">
+									<i class="bi bi-geo-alt"></i>
+									<span>@evt.Location</span>
+								</div>
+								<div class="info-item">
+									<i class="bi bi-tag"></i>
+									<span>@evt.Price.ToString("N0") Kr</span>
+								</div>
+							</div>
+
+							<CascadingAuthenticationState>
+								<AuthorizeView>
+									<Authorized>
+										<AuthorizeView Context="auth" Roles="User">
+											<div class="d-grid gap-2 mt-3">
+												<a href="@($"/events/{@evt.Id}")" class="btn btn-primary">View Details</a>
+											</div>
+										</AuthorizeView>
+									</Authorized>
+								</AuthorizeView>
+							</CascadingAuthenticationState>
+
+						</div>
+					</div>
+				</div>
+			}
+		}
+	</div>
+</div>
+
+
+@code {
+	private List<Event> events;
+
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			events = await HttpClient.GetFromJsonAsync<List<Event>>("/events") ?? [];
+		}
+		catch (Exception)
+		{
+			events = new List<Event>();
+		}
+	}
+}
