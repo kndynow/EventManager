@@ -1,390 +1,103 @@
 @page "/"
+@using System.Net.Http.Json
 @using EventManager.Client.Models
 @using EventManager.Client.Services
-@inject IEventService EventService
+@inject HttpClient HttpClient
 
 <PageTitle>Event Manager - Home</PageTitle>
 
-<style>
-    .card-img-top {
-        width: 100%;
-        height: auto;
-        object-fit: contain;
-        background-color: transparent;
-    }
-
-    .card {
-        transition: background-color 0.3s ease;
-        height: 100% !important;
-        border: none;
-        background-color: transparent;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .card:hover {
-        transform: none;
-            background-color: #b141a9;
-    }
-
-    .card-title {
-        color: white !important;
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-    }
-
-    .card:hover .card-title {
-        color: white !important;
-    }
-
-    .card-title a {
-        color: white;
-        text-decoration: none;
-    }
-
-    .card-title a:hover {
-        color: rgba(255, 255, 255, 0.8);
-    }
-
-    .card-text {
-        color: white !important;
-        font-size: 1.2rem;
-        font-weight: 500;
-    }
-
-    .card-text i {
-        margin-right: 0.5rem;
-        color: rgba(255, 255, 255, 0.9) !important;
-        font-size: 1.2rem;
-    }
-
-    .text-muted {
-        color: rgba(255, 255, 255, 0.8) !important;
-        font-size: 0.9rem;
-    }
-
-    .card-body {
-        padding: 1.5rem;
-        transition: none;
-        color: white;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .container {
-        margin-top: 1rem !important;
-        padding-left: 5rem !important;
-        padding-right: 5rem !important;
-    }
-
-    @@media (max-width: 768px) {
-        .container {
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-        }
-    }
-
-    .jumbotron {
-        margin-top: 0.5rem !important;
-        margin-bottom: 0.5rem !important;
-    }
-
-    .welcome-banner {
-        height: 600px;
-        margin-bottom: 3rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .welcome-banner img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: cover;
-    }
-
-    .card i {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-    }
-
-    .card h3 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-    }
-
-    .card-type {
-        color: white !important;
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-    }
-</style>
 
 <div class="jumbotron text-center mb-5">
-    <h1 class="display-4">Welcome to Linköping</h1>
-    <p class="lead">Discover and book amazing events in your area</p>
+	<h1 class="display-4">Welcome to Linköping</h1>
+	<p class="lead">Discover and book amazing events in your area</p>
 </div>
 
-<div class="container mt-4">
-    <div class="welcome-banner">
-        <img src="../images/evenemang.png" alt="Welcome Banner">
-    </div>
+<div class="container">
+	<div class="welcome-banner">
+		<img src="../images/evenemang.png" alt="Welcome Banner">
+	</div>
 
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-calendar-event display-4 text-primary mb-3"></i>
-                    <h3>Browse Events</h3>
-                    <p>Explore a wide variety of events happening near you</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-ticket-perforated display-4 text-success mb-3"></i>
-                    <h3>Book Tickets</h3>
-                    <p>Easy and secure ticket booking process</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-person-circle display-4 text-info mb-3"></i>
-                    <h3>Manage Bookings</h3>
-                    <p>Keep track of all your event bookings in one place</p>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="row mt-1">
+		<div class="col-md-4">
+			<NavLink href="/events" class="text-decoration-none">
+				<div class="card h-100">
+					<div class="card-body text-center">
+						<i class="bi bi-calendar-event display-4 text-primary mb-3"></i>
+						<h3>Browse Events</h3>
+						<p>Explore a wide variety of events happening near you</p>
+					</div>
+				</div>
+			</NavLink>
+		</div>
+		<div class="col-md-4">
+			<div class="card h-100">
+				<div class="card-body text-center">
+					<i class="bi bi-ticket-perforated display-4 text-success mb-3"></i>
+					<h3>Book Tickets</h3>
+					<p>Easy and secure ticket booking process</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="card h-100">
+				<NavLink href="/bookings" class="text-decoration-none">
+					<div class="card-body text-center">
+						<i class="bi bi-person-circle display-4 text-info mb-3"></i>
+						<h3>Manage Bookings</h3>
+						<p>Keep track of all your event bookings in one place</p>
+					</div>
+				</NavLink>
+			</div>
+		</div>
+	</div>
 
-    <div class="row mt-5">
-        <div class="col-12">
-            <h2 id="upcoming-events">Upcoming Events</h2>
-        </div>
-    </div>
+	<div class="row mt-5">
+		<div class="col-12">
+			<h2 id="upcoming-events">Upcoming Events</h2>
+		</div>
+	</div>
 
-    <div class="mt-5">
-        <div class="row g-4">
-            @foreach (var evt in events)
-            {
-                <div class="col-md-3">
-                    <div class="card h-100 border-0">
-                        <a href="/events/@evt.Id" class="text-decoration-none">
-                            <div class="card-body p-0">
-                                <img src="@evt.ImageUrl" class="card-img-top" alt="@evt.Name">
-                            </div>
-                            <div class="card-body">
-                                <h6 class="card-type">@evt.Category</h6>
-                                <h5 class="card-title">@evt.Name</h5>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
+	<div class="mt-5">
+		<div class="row g-4">
+			@foreach (var evt in events)
+			{
+				<div class="col-md-3">
+					<div class="card h-100 border-0">
+						<a href="@($"/events/{evt.Id}")" class="text-decoration-none">
+							<div class="card-body p-0">
+								<img src="@evt.ImageUrl" class="card-img-top" alt="@evt.Name">
+							</div>
+							<div class="card-body">
+								<h6 class="card-type">@evt.Type</h6>
+								<h5 class="card-title">@evt.Name</h5>
+							</div>
+						</a>
+					</div>
+				</div>
+			}
+		</div>
+	</div>
 </div>
 
 @code {
-    private List<Event> events = new()
-    {
-        new Event
-        {
-            Id = 1,
-            Name = "Linköping water games",
-            Description = "Linköpings Allmänna Simsällskap är stolta att bjuda in till det andra årliga Linköping Water Games 2025, 28-30 mars. ",
-            Start = DateTime.Parse("2025-03-28"),
-            End = DateTime.Parse("2025-03-30"),
-            Location = "Tinnerbäcksbadet",
-            ImageUrl = "images/watergames.png",
-            Price = 100m,
-            AvailableTickets = 500,
-            MaxAttendees = 500,
-            Category = "sport",
-            IsActive = true,
-            CreatedAt = DateTime.Now
-        },
-        new Event
-        {
-            Id = 2,
-            Name = "Ghost – Skeletour World Tour 2025",
-            Description = "Ghost, ett av världens mest älskade band, åker ut på världsturné. Med över 55 datum i Europa, Nordamerika och Sydamerika nästa år så blir turnén den största hittills för det prisbelönta bandet. Under turnén blir det två konserter i Sverige, varav en i hemstaden Linköping 22 maj på Saab Arena.",
-            Start = DateTime.Parse("2025-05-22"),
-            End = DateTime.Parse("2025-05-22"),
-            Location = "Saab Arena",
-            ImageUrl = "images/ghost.png",
-            Price = 855m,
-            AvailableTickets = 1000,
-            MaxAttendees = 1000,
-            Category = "Music",
-            IsActive = true,
-            CreatedAt = DateTime.Now
-        },
-        new Event
-        {
-            Id = 3,
-            Name = "We Will Rock You",
-            Description = "WE WILL ROCK YOU är succémusikalen som baseras på låtar av Queen. Denna musikaliskt och visuellt storslagna föreställning åker nu ut på stor arenaturné efter sommarens stora succé på Dalhalla.",
-            Start = DateTime.Parse("2025-05-23"),
-            End = DateTime.Parse("2025-05-23"),
-            Location = "Saab Arena",
-            ImageUrl = "images/rock.png",
-            Price = 695m,
-            AvailableTickets = 800,
-            MaxAttendees = 800,
-            Category = "Music",
-            IsActive = true,
-            CreatedAt = DateTime.Now
-        },
-        new Event
-        {
-            Id = 4,
-            Name = "Saxon – Hell, Fire And Steel",
-            Description = "Experience the legendary Saxon live in concert with their 'Hell, Fire And Steel' tour!",
-            Start = DateTime.Parse("2025-07-26"),
-            End = DateTime.Parse("2025-07-26"),
-            Location = "Saab Arena, Linköping",
-            ImageUrl = "images/saxon.png",
-            AvailableTickets = 1000,
-            MaxAttendees = 1000,
-            Price = 599,
-            IsActive = true,
-            CreatedAt = DateTime.Now,
-            Category = "Music"
-        },
-        new Event
-        {
-            Id = 5,
-            Name = "Bolaget RODEO II",
-            Description = "The ultimate country music festival returns to Linköping!",
-            Start = DateTime.Parse("2025-08-02"),
-            End = DateTime.Parse("2025-08-02"),
-            Location = "Folkets Park, Linköping",
-            ImageUrl = "images/rodeo.png",
-            AvailableTickets = 800,
-            MaxAttendees = 800,
-            Price = 499,
-            IsActive = true,
-            CreatedAt = DateTime.Now,
-            Category = "Festival"
-        },
-        new Event
-        {
-            Id = 6,
-            Name = "Diggiloo 2025",
-            Description = "Sweden's favorite summer tour is back with an amazing show!",
-            Start = DateTime.Parse("2025-08-10"),
-            End = DateTime.Parse("2025-08-10"),
-            Location = "Linköping Konsert & Kongress",
-            ImageUrl = "images/diggiloo.png",
-            AvailableTickets = 1200,
-            MaxAttendees = 1200,
-            Price = 699,
-            IsActive = true,
-            CreatedAt = DateTime.Now,
-            Category = "music"
-        },
-        new Event
-        {
-            Id = 7,
-            Name = "Laleh sommarturné 2025",
-            Description = "Laleh firar 20 år som artist och åker ut på storslagen sommarturné 2025! På turnén ska hon fira denna böljande musikaliska resa tillsammans med publiken och försöka förstå allt som hänt under dessa fullspäckade 20 år. Det blir en jubileumsturné med 17 stopp över hela Sverige. ",
-            Start = DateTime.Parse("2025-08-16"),
-            End = DateTime.Parse("2025-08-16"),
-            Location = "Stångebrofältet",
-            ImageUrl = "images/laleh.png",
-            AvailableTickets = 1200,
-            MaxAttendees = 1200,
-            Price = 695,
-            IsActive = true,
-            CreatedAt = DateTime.Now,
-            Category = "music"
-        },
-        new Event
-        {
-            Id = 8,
-            Name = "Festival of the Midnight Sun 2025",
-            Description = "Den 4-6 september 2025 återvänder Festival of the Midnight Sun till Skylten i Linköping!",
-            Start = DateTime.Parse("2025-09-04"),
-            End = DateTime.Parse("2025-09-06"),
-            Location = "Skylten",
-            ImageUrl = "images/midnight.png",
-            AvailableTickets = 1200,
-            MaxAttendees = 1200,
-            Price = 780,
-            IsActive = true,
-            CreatedAt = DateTime.Now,
-            Category = "testival"
-        },
-        new Event
-        {
-            Id = 9,
-            Name = "Bonfire",
-            Description = "Bonfire Festival gör ett glödhett återbesök till Linköping och Stångebrofältet den 5-6 september 2025. Med tre succéartade år i ryggen så ser vi ingen anledning till varför 2025 års upplaga inte kommer få hela Linköping att koka!",
-            Start = DateTime.Parse("2025-09-05"),
-            End = DateTime.Parse("2025-09-06"),
-            Location = "stångebrofältet",
-            ImageUrl = "images/bonfire.png",
-            AvailableTickets = 1200,
-            MaxAttendees = 1200,
-            Price = 1899,
-            IsActive = true,
-            CreatedAt = DateTime.Now,
-            Category = "festival"
-        },
-        new Event
-        {
-            Id = 10,
-            Name = "SALO & JÖBACK: A Show Extravaganza",
-            Description = "Ola Salo och Peter Jöback är två artister som inte behöver någon närmare presentation, båda har enastående karriärer med ett brett artisteri som rört sig över flera genres. Allt från gigantiska hits, nationella anthems, The Ark, succémusikaler i Sverige, West End och Broadway, älskad julmusik till samarbeten med internationella popartister.",
-            Start = DateTime.Parse("2025-10-11"),
-            End = DateTime.Parse("2025-10-11"),
-            Location = "Saab Arena",
-            ImageUrl = "images/salo.png",
-            AvailableTickets = 1200,
-            MaxAttendees = 1200,
-            Price = 650,
-            IsActive = true,
-            CreatedAt = DateTime.Now,
-            Category = "music"
-        },
-        new Event
-        {
-            Id = 11,
-            Name = "A Show Larger Than Life",
-            Description = "Efter två succésäsonger i Stockholm och Göteborg åker publik- och kritikerhyllade \"A Show Larger Than Life\" ut på en arenaturné hösten 2025.",
-            Start = DateTime.Parse("2025-11-21"),
-            End = DateTime.Parse("2025-11-21"),
-            Location = "Saab Arena",
-            ImageUrl = "images/ashow.png",
-            AvailableTickets = 1200,
-            MaxAttendees = 1200,
-            Price = 495,
-            IsActive = true,
-            CreatedAt = DateTime.Now,
-            Category = "music"
-        },
-    };
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            var loadedEvents = await EventService.GetEventsAsync();
-            if (loadedEvents != null && loadedEvents.Any())
-            {
-                events = loadedEvents;
-            }
-        }
-        catch
-        {
-            // if an error occurs, use the mock data
-        }
-    }
-} 
+	private List<Event> events = [];
+
+	protected override async Task OnInitializedAsync()
+	{
+
+		try
+		{
+			var loadedEvents = await HttpClient.GetFromJsonAsync<List<Event>>("/events") ?? [];
+			if (loadedEvents != null && loadedEvents.Any())
+			{
+				events = loadedEvents;
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error fetching events: {ex.Message}");
+			events = [];
+		}
+	}
+}
