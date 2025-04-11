@@ -1,265 +1,175 @@
-@page "/events/{Id:int}"
+@page "/events/{Id}"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 @using EventManager.Client.Models
 @using EventManager.Client.Services
-@inject IEventService EventService
+@inject HttpClient HttpClient
+@inject IAuthenticationService AuthService
 @inject NavigationManager NavigationManager
 
 <div class="container">
-    @if (evt == null)
-    {
-        <div class="text-center">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="back-button mb-4">
-            <a href="/#upcoming-events" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left"></i> Back to Events
-            </a>
-        </div>
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card h-100 border-0">
-                    <div class="card-body p-0">
-                        <div class="image-container">
-                            <img src="@evt.ImageUrl" class="img-fluid" alt="@evt.Name">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card h-100 border-0">
-                    <div class="card-body">
-                        <h1 class="card-title">@evt.Name</h1>
-                        <div class="card mb-4 border-0">
-                            <div class="card-body">
-                                <ul class="list-unstyled">
-                                    <li><strong>Date:</strong> @evt.Start.ToString("MMMM d, yyyy")</li>
-                                    <li><strong>Time:</strong> @evt.Start.ToString("HH:mm")</li>
-                                    <li><strong>Location:</strong> @evt.Location</li>
-                                    <li><strong>Price:</strong> @evt.Price.ToString("N0") Kr</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="card border-0">
-                            <div class="card-body">
-                                <h5 class="card-title">Book Tickets</h5>
-                                <form @onsubmit="HandleSubmit">
-                                    <div class="form-group">
-                                        <label for="quantity" class="form-label">Number of Tickets</label>
-                                        <input type="number" class="form-control" id="quantity" @bind="quantity" min="1" max="2" required>
-                                    </div>
-                                    <div class="ticket-limit">Maximum 2 tickets per account</div>
-                                    <div class="total-price">
-                                        Total: <span class="price-number">@(evt.Price * quantity)</span> Kr
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Book Now</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card border-0">
-                    <div class="card-body">
-                        <h5 class="card-title">Description</h5>
-                        <p class="card-text">
-                            @(new MarkupString(evt.Description.Replace("\n\n", "<br><br>")))
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
+	@if (evt is null)
+	{
+		<div class="text-center">
+			<div class="spinner-border" role="status">
+				<span class="visually-hidden">Loading...</span>
+			</div>
+		</div>
+	}
+	else
+	{
+		<div class="back-button mb-4">
+			<a href="/#upcoming-events" class="btn btn-outline-secondary">
+				<i class="bi bi-arrow-left"></i> Back to Events
+			</a>
+		</div>
+		<div class="row g-4">
+			<div class="col-md-6">
+				<div class="card h-100 border-0">
+					<div class="card-body p-0">
+						<div class="image-container">
+							<img src="@evt.ImageUrl" class="img-fluid" alt="@evt.Name">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="card h-100 border-0">
+					<div class="card-body">
+						<h1 class="card-title">@evt.Name</h1>
+						<div class="card mb-4 border-0">
+							<div class="card-body">
+								<ul class="list-unstyled">
+									<li><strong>Date:</strong> @evt.StartTime.ToString("MMMM d, yyyy")</li>
+									<li><strong>Time:</strong> @evt.StartTime.ToString("HH:mm")</li>
+									<li><strong>Location:</strong> @evt.Location</li>
+									<li><strong>Price:</strong> @evt.Price.ToString("N0") Kr</li>
+								</ul>
+							</div>
+						</div>
+						<div class="card border-0">
+							<div class="card-body">
+								<h5 class="card-title">Book Tickets</h5>
+								<EditForm Model="@booking" OnValidSubmit="HandleSubmit">
+									<DataAnnotationsValidator />
+
+									<div class="form-group">
+										<label for="quantity" class="form-label">Number of Tickets</label>
+										<InputNumber id="quantity" class="form-control"
+											@bind-Value="@booking.TicketCount" min="0" max="5" />
+										<ValidationMessage For="@(() => booking.TicketCount)" />
+										@if (booking.TicketCount >= 5)
+										{
+											<div class="text-danger">Maximum 5 tickets per account</div>
+										}
+									</div>
+
+									<div class="ticket-limit">Total tickets available: @evt.AvailableTickets</div>
+									<div class="total-price">
+										Total: <span class="price-number">@(evt.Price* booking.TicketCount)</span> Kr
+									</div>
+
+									<button type="submit" class="btn btn-primary" disabled="@(booking.TicketCount <= 0 || booking.TicketCount > 5)">Book Now</button>
+
+									@if (!string.IsNullOrEmpty(Message))
+									{
+										<div class="@MessageClass">@Message</div>
+									}
+								</EditForm>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="col-12">
+				<div class="card border-0">
+					<div class="card-body">
+						<h5 class="card-title">Description</h5>
+						<p class="card-text">
+							@(new MarkupString(evt.Description.Replace("\n\n", "<br><br>")))
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
 </div>
 
-<style>
-    .container {
-        padding-top: 0.5rem;
-        padding-bottom: 2rem;
-        padding-left: 8rem !important;
-        padding-right: 8rem !important;
-    }
-    .back-button {
-        margin-top: 1rem;
-    }
-    .card {
-        border: none;
-        box-shadow: none;
-        transition: none;
-        transform: none !important;
-        background-color: transparent;
-    }
-    .card:hover {
-        transform: none !important;
-        box-shadow: none !important;
-    }
-    .card-body {
-        padding: 1.5rem;
-        transition: none;
-        color: white;
-    }
-    .card-title {
-        color: white;
-        font-size: 2rem;
-    }
-    .image-container {
-        position: relative;
-        width: 100%;
-        padding-bottom: 100%;
-        overflow: hidden;
-        border-radius: 10px;
-    }
-    .image-container img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: none;
-        border-radius: 10px;
-    }
-    .btn {
-        border-radius: 0;
-        transition: none;
-    }
-    .btn:hover {
-        transform: none;
-    }
-    .btn-outline-secondary {
-        border: none;
-        color: white;
-        background: transparent;
-        padding: 0.5rem 1rem;
-        transition: opacity 0.3s ease;
-    }
-    .btn-outline-secondary:hover {
-        background: transparent;
-        color: white;
-        opacity: 0.8;
-    }
-    .btn-outline-secondary i {
-        margin-right: 0.5rem;
-        transition: transform 0.3s ease;
-    }
-    .btn-outline-secondary:hover i {
-        transform: translateX(-3px);
-    }
-    .list-unstyled {
-        margin-bottom: 0;
-    }
-    .list-unstyled li {
-        color: white;
-        font-size: 0.9rem;
-        margin-bottom: 0.3rem;
-    }
-    .list-unstyled li strong {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 0.9rem;
-    }
-    .card-text {
-        font-size: 1rem;
-        color: white;
-    }
-    h5.card-title {
-        font-size: 1.3rem;
-        color: white;
-    }
-    .total-price {
-        font-size: 1.3rem;
-        color: white;
-        margin-bottom: 0.8rem;
-    }
-    .total-price .price-number {
-            color: #b141a9;
-        font-weight: bold;
-    }
-    .form-control {
-        background-color: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: white;
-    }
-    .form-control:focus {
-        background-color: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.3);
-        color: white;
-        box-shadow: none;
-    }
-    .form-label {
-        color: white;
-        font-size: 1rem;
-    }
-    .form-group {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 0.3rem;
-    }
-    .form-group label {
-        margin-bottom: 0;
-        white-space: nowrap;
-    }
-    .form-group input {
-        width: 100px;
-    }
-    .ticket-limit {
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.6);
-        margin-bottom: 0.8rem;
-    }
-    @@media (max-width: 768px) {
-        .container {
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-        }
-    }
-</style>
 
 @code {
-    [Parameter]
-    public int Id { get; set; }
 
-    private Event evt;
-    private int quantity = 1;
+	[Parameter]
+	public string Id { get; set; }
+	private Event evt;
+	private string? userId;
+	private Booking booking = new();
+	private string? Message;
+	private string? MessageClass;
 
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            if (Id > 0)
-            {
-                evt = await EventService.GetEventByIdAsync(Id);
-                if (evt == null)
-                {
-                    NavigationManager.NavigateTo("/");
-                }
-            }
-            else
-            {
-                NavigationManager.NavigateTo("/");
-            }
-        }
-        catch (Exception)
-        {
-            NavigationManager.NavigateTo("/");
-        }
-    }
+	private decimal CalculateTotalPrice => evt?.Price * booking.TicketCount ?? 0;
 
-    private async Task HandleSubmit()
-    {
-        if (quantity <= 0 || quantity > 2)
-        {
-            return;
-        }
+	protected override async Task OnInitializedAsync()
+	{
+		try
+		{
+			// Fetch the event
+			evt = await HttpClient.GetFromJsonAsync<Event>($"/events/{Id}");
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error fetching event: {ex.Message}");
+			NavigationManager.NavigateTo("/");
+		}
+	}
 
-        // TODO: Add the event to the cart and redirect to the cart page
-        NavigationManager.NavigateTo("/");
-    }
-} 
+	private async Task HandleSubmit()
+	{
+		try
+		{
+			// Check if there are enough tickets available
+			if (booking.TicketCount > evt.AvailableTickets)
+			{
+				MessageClass = "booking-unsuccsesful";
+				Message = "Not enough tickets available.";
+				return;
+			}
+			userId = await AuthService.GetUserId();
+
+			if (string.IsNullOrEmpty(userId))
+			{
+				MessageClass = "booking-unsuccsesful";
+				Message = "Failed to book tickets. User ID not found.";
+				return;
+			}
+			// Create a new booking
+			var response = await HttpClient.PostAsJsonAsync($"/users/{userId}/bookings", new
+			{
+				EventId = evt.Id,
+				TicketCount = booking.TicketCount,
+				TotalPrice = CalculateTotalPrice
+			});
+			// Check if the booking was successful
+			if (response.IsSuccessStatusCode)
+			{
+				// Update the event's available tickets
+				evt.AvailableTickets -= booking.TicketCount;
+				MessageClass = "booking-successful";
+				Message = "Tickets booked successfully!";
+			}
+			else
+			{
+				Console.WriteLine($"Booking failed");
+				MessageClass = "booking-unsuccsesful";
+				Message = "Failed to book tickets. Please try again later.";
+			}
+		}
+		catch (Exception ex)
+		{
+			MessageClass = "booking-unsuccsesful";
+			Message = "Failed to book tickets. Please try again later.";
+			Console.WriteLine($"Catch-block: Error booking tickets: {ex.Message}");
+		}
+	}
+}
